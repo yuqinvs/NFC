@@ -7,7 +7,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "db:migrate": "wrangler d1 migrations apply nfc-verification-worker --remote",
-    "db:seed": "wrangler d1 execute nfc-verification-worker --remote --file=./migrations/0003_seed_from_sqlite.sql"
+    "db:seed": "wrangler d1 execute nfc-verification-worker --remote --file=./migrations/0002_admin_tokens.sql"
   },
   "dependencies": {
     "itty-router": "^4.2.2",
