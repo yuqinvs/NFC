@@ -17,6 +17,41 @@ function getCountryName(code) {
   }
 }
 
+// Ensure required D1 tables exist (runtime bootstrap fallback)
+async function ensureSchema(env) {
+  try {
+    await env.DB.prepare(`CREATE TABLE IF NOT EXISTS products (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nfc_code TEXT UNIQUE NOT NULL,
+      product_name TEXT NOT NULL,
+      is_authentic INTEGER DEFAULT 1,
+      country TEXT,
+      country_name TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );`).run();
+
+    await env.DB.prepare(`CREATE TABLE IF NOT EXISTS scan_records (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nfc_code TEXT NOT NULL,
+      ip_address TEXT,
+      country TEXT,
+      scanned_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );`).run();
+
+    await env.DB.prepare(`CREATE TABLE IF NOT EXISTS admin_tokens (
+      token TEXT PRIMARY KEY,
+      issued_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      expires_at DATETIME NOT NULL
+    );`).run();
+
+    await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_products_nfc_code ON products(nfc_code);`).run();
+    await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_scan_records_nfc_code ON scan_records(nfc_code);`).run();
+    await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_admin_tokens_expires ON admin_tokens(expires_at);`).run();
+  } catch (e) {
+    // no-op: if creation fails, queries below will surface errors
+  }
+}
+
 async function verifyAdminToken(request, env) {
   const auth = request.headers.get('Authorization') || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
@@ -40,6 +75,7 @@ async function handleAdminLogin(request, env) {
   const ttlHours = parseInt(env.ADMIN_TOKEN_TTL_HOURS || '24', 10);
   const expiresAt = new Date(Date.now() + ttlHours * 3600 * 1000).toISOString();
   const token = crypto.randomUUID();
+  await ensureSchema(env);
   await env.DB.prepare('INSERT INTO admin_tokens (token, expires_at) VALUES (?, ?)')
     .bind(token, expiresAt)
     .run();
@@ -55,6 +91,7 @@ async function handleAdminVerify(request, env) {
 async function handleAdminStats(request, env) {
   const auth = await verifyAdminToken(request, env);
   if (!auth.ok) return json({ error: auth.error }, { status: 401 });
+  await ensureSchema(env);
   try {
     const { results } = await env.DB.prepare(`
       SELECT 
@@ -91,6 +128,7 @@ async function handleAdminAddProduct(request, env) {
   if (!nfcCode || !productName) return json({ error: 'nfcCode and productName are required' }, { status: 400 });
   const authentic = (String(isAuthentic ?? '1').trim() === '1') ? 1 : 0;
   try {
+    await ensureSchema(env);
     await env.DB.prepare('INSERT OR IGNORE INTO products (nfc_code, product_name, is_authentic) VALUES (?, ?, ?)')
       .bind(String(nfcCode).trim(), String(productName).trim(), authentic)
       .run();
@@ -109,6 +147,8 @@ async function handleVerify(request, env, nfcCode) {
   const clientIP = request.headers.get('CF-Connecting-IP') || '';
   const country = (request.cf && request.cf.country) || 'Unknown';
   const countryName = getCountryName(country);
+
+  await ensureSchema(env);
 
   try {
     const product = await env.DB.prepare('SELECT * FROM products WHERE nfc_code = ?').bind(nfcCode).first();
@@ -165,6 +205,8 @@ async function handleImportProducts(request, env) {
   if (request.method !== 'POST') return json({ error: 'Method Not Allowed' }, { status: 405 });
   const auth = await verifyAdminToken(request, env);
   if (!auth.ok) return json({ error: auth.error }, { status: 401 });
+
+  await ensureSchema(env);
 
   const formData = await request.formData();
   const file = formData.get('excelFile') || formData.get('file') || formData.get('upload');
