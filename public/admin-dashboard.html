@@ -373,8 +373,8 @@
                 <div class="form-group">
                     <label for="isAuthentic">Product Type:</label>
                     <select id="isAuthentic" name="isAuthentic" required>
-                        <option value="true">Authentic Product</option>
-                        <option value="false">Counterfeit Product</option>
+                        <option value="1" selected>Authentic Product</option>
+                        <option value="0">Counterfeit Product</option>
                     </select>
                 </div>
                 
@@ -545,7 +545,7 @@
             const productData = {
                 nfcCode: formData.get('nfcCode'),
                 productName: formData.get('productName'),
-                isAuthentic: formData.get('isAuthentic') === 'true'
+                isAuthentic: isAuthenticValue === '1' ? 1 : 0
             };
 
             fetch('/api/admin/products', {
