@@ -1,5 +1,5 @@
 # API routes redirect to Worker
-/api/* https://nfc-verification-worker.verify.plearance.com/api/:splat 200
+/api/* https://verifynfc.verify.plearance.com/api/:splat 200
 
 # Admin routes
 /admin-login /admin-login.html 200

@@ -1,5 +1,5 @@
 {
-  "name": "nfc-verification-worker",
+  "name": "verifynfc",
   "version": "1.0.0",
   "description": "NFC Verification System for Cloudflare Workers",
   "main": "worker.js",
