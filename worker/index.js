@@ -107,7 +107,6 @@ async function handleAdminStats(request, env) {
         FROM scan_records
         GROUP BY nfc_code
       ) sc ON p.nfc_code = sc.nfc_code
-      WHERE p.is_authentic = 1
       ORDER BY total_scans DESC
     `).all();
     return json({ products: results || [] });
