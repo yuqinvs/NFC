@@ -185,11 +185,14 @@ async function handleVerify(request, env, nfcCode) {
     const boundCountry = product.country || country;
     const boundCountryName = product.country_name || countryName;
 
-    // Country ranking for this product (number of scans in bound country)
-    const countryCountRes = await env.DB.prepare(
-      'SELECT COUNT(*) as country_scans FROM scan_records WHERE nfc_code = ? AND country = ?'
-    ).bind(nfcCode, boundCountry).first();
-    const countryRank = countryCountRes ? countryCountRes.country_scans : 1;
+    // Country unique NFC ranking: only compute when first time this nfc_code is scanned
+    let countryRank;
+    if (isFirstScan) {
+      const uniqRes = await env.DB.prepare(
+        'SELECT COUNT(DISTINCT nfc_code) as unique_codes FROM scan_records WHERE country = ?'
+      ).bind(country).first();
+      countryRank = uniqRes ? uniqRes.unique_codes : 1;
+    }
 
     return json({
       productName: product.product_name,
@@ -197,7 +200,7 @@ async function handleVerify(request, env, nfcCode) {
       scanCount: totalScans,
       country: boundCountry,
       countryName: boundCountryName,
-      countryRank,
+      ...(countryRank !== undefined ? { countryRank } : {}),
       isNewUser: isFirstScan,
       timestamp: new Date().toISOString(),
     });

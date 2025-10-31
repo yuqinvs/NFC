@@ -77,45 +77,44 @@
         }
 
         function displayVerificationResult(data) {
-            const resultDiv = document.getElementById('verificationResult');
-            const isAuthentic = data.isAuthentic;
-            
-            resultDiv.innerHTML = `
-                <div class="result-card ${isAuthentic ? 'authentic' : 'fake'}">
-                    <div class="result-header">
-                        <h2>${isAuthentic ? '✅ Authentic Product' : '❌ Suspected Counterfeit'}</h2>
-                        <div class="product-name">${data.productName}</div>
-                    </div>
-                    
-                    <div class="result-details">
-                        <div class="detail-item">
-                            <span class="label">Scan Count:</span>
-                            <span class="value">${data.scanCount} times</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="label">Scan Region:</span>
-                            <span class="value">${data.country}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="label">Regional Ranking:</span>
-                            <span class="value">#${data.countryRank || 1} user</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="label">Verification Time:</span>
-                            <span class="value">${new Date(data.timestamp).toLocaleString('en-US')}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="authenticity-message">
-                        ${isAuthentic ? 
-                            '<p>🎉 Congratulations! This is an authentic product. Thank you for choosing genuine products!</p>' : 
-                            '<p>⚠️ Warning: This product may be counterfeit. Please purchase with caution and consider buying through official channels.</p>'
-                        }
-                    </div>
-                </div>
-            `;
-            
-            resultDiv.style.display = 'block';
+            const resultDiv = document.getElementById('result');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDetails = document.getElementById('modal-details');
+
+            resultDiv.classList.remove('loading');
+
+            if (!data || typeof data.isAuthentic === 'undefined') {
+              showError('Verification failed. Please try again.');
+              return;
+            }
+
+            if (data.isAuthentic) {
+              modalTitle.innerHTML = `✅ Verified Authentic`;
+
+              const scanCount = data.scanCount || 1;
+              const countryName = data.countryName || 'Unknown';
+              const countryRank = data.countryRank;
+
+              const rankingHtml = (data.isNewUser && typeof countryRank !== 'undefined')
+                ? `<div class="detail-item"><span class="label">Regional Ranking:</span><span class="value">#${countryRank} unique NFC</span></div>`
+                : '';
+
+              modalDetails.innerHTML = `
+                <div class="detail-item"><span class="label">Product:</span><span class="value">${data.productName || 'NFC Product'}</span></div>
+                <div class="detail-item"><span class="label">Scan Count:</span><span class="value">${scanCount}</span></div>
+                <div class="detail-item"><span class="label">Scan Region:</span><span class="value">${countryName}</span></div>
+                ${rankingHtml}
+              `;
+            } else {
+              modalTitle.innerHTML = `⚠️ Potential Counterfeit`;
+              modalDetails.innerHTML = `
+                <div class="detail-item"><span class="label">Product:</span><span class="value">${data.productName || 'Unknown Product'}</span></div>
+                <div class="detail-item"><span class="label">Scan Count:</span><span class="value">${data.scanCount || 1}</span></div>
+                <div class="detail-item"><span class="label">Scan Region:</span><span class="value">${data.countryName || 'Unknown'}</span></div>
+              `;
+            }
+
+            resultDiv.classList.add('success');
         }
 
         function displayError(message, details = '') {
