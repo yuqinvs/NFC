@@ -1,4 +1,4 @@
-name = "nfc-verification-worker"
+name = "verifynfc"
 main = "worker/index.js"
 compatibility_date = "2024-10-31"
 workers_dev = true
