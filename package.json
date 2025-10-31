@@ -2,16 +2,17 @@
   "name": "verifynfc",
   "version": "1.0.0",
   "description": "NFC Verification System for Cloudflare Workers",
-  "main": "worker.js",
+  "main": "worker/index.js",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "db:init": "wrangler d1 execute nfc-verification-db --file=./schema.sql",
-    "db:migrate": "wrangler d1 migrations apply nfc-verification-db",
-    "pages:deploy": "wrangler pages deploy public"
+    "db:migrate": "wrangler d1 migrations apply NFC_DB",
+    "db:seed": "wrangler d1 execute NFC_DB --file=./migrations/0003_seed_from_sqlite.sql"
   },
   "dependencies": {
-    "itty-router": "^4.2.2"
+    "itty-router": "^4.2.2",
+    "xlsx": "^0.18.5",
+    "sql.js": "^1.10.0"
   },
   "devDependencies": {
     "wrangler": "^3.0.0"

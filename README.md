@@ -45,7 +45,7 @@ npm start
 
 5. Access the application:
 - Main page: http://localhost:3000
-- Admin login: http://localhost:3000/admin-login
+- Admin login: https://verify.plearance.com/admin-login
 
 ## Usage
 

@@ -1,0 +1,4 @@
+nfc_code,product_name,is_authentic
+NFC1001,测试产品 Alpha,1
+NFC1002,测试产品 Beta,1
+NFC2001,未知来源 Gamma,0

@@ -1,28 +1,28 @@
-name = "verifynfc"
-main = "worker.js"
-compatibility_date = "2024-01-15"
-send_metrics = false
+name = "nfc-verification-worker"
+main = "worker/index.js"
+compatibility_date = "2024-10-31"
+workers_dev = true
+logpush = true
+node_compat = true
 
-# D1 Database binding
-[[d1_databases]]
-binding = "DB"
-database_name = "nfc-verification-db"
-database_id = "your-database-id-here"
+# Custom domain route
+routes = [
+  { pattern = "verify.plearance.com/*", zone_name = "plearance.com" }
+]
 
-# KV namespace for caching and rate limiting
-[[kv_namespaces]]
-binding = "CACHE"
-id = "your-kv-namespace-id"
-preview_id = "your-preview-kv-namespace-id"
-
-# Environment variables
 [vars]
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "admin123"
-JWT_SECRET = "your-jwt-secret-key-change-this"
-DOMAIN = "verify.plearance.com"
+ADMIN_TOKEN_TTL_HOURS = "24"
 
-# Routes configuration
-[[routes]]
-pattern = "verify.plearance.com/api/*"
-zone_name = "plearance.com"
+[assets]
+directory = "./public"
+
+# Configure D1 (set your real database_id after creating D1 in Cloudflare)
+[[d1_databases]]
+binding = "DB"
+database_name = "NFC_DB"
+database_id = "eabca273-1f85-416a-b1c7-b59dda3ab658"
+
+# Migrations directory for D1
+migrations_dir = "migrations"
