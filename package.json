@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "db:migrate": "wrangler d1 migrations apply NFC_DB",
-    "db:seed": "wrangler d1 execute NFC_DB --file=./migrations/0003_seed_from_sqlite.sql"
+    "db:migrate": "wrangler d1 migrations apply nfc-verification-worker",
+    "db:seed": "wrangler d1 execute nfc-verification-worker --file=./migrations/0003_seed_from_sqlite.sql"
   },
   "dependencies": {
     "itty-router": "^4.2.2",
