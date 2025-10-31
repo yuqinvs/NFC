@@ -102,7 +102,7 @@ async function handleAdminAddProduct(request, env) {
 
 // Verify API (unchanged)
 async function handleVerify(request, env, nfcCode) {
-  if (request.method !== 'POST') {
+  if (request.method !== 'POST' && request.method !== 'GET') {
     return json({ error: 'Method Not Allowed' }, { status: 405 });
   }
 
@@ -278,10 +278,22 @@ export default {
     }
 
     // API routes
-    if (url.pathname.startsWith('/api/verify/')) {
-      const nfcCode = decodeURIComponent(url.pathname.replace('/api/verify/', ''));
-      return handleVerify(request, env, nfcCode);
+    if (url.pathname === '/api/verify') {
+      const sp = url.searchParams;
+      let nfcCode = sp.get('nfcid') || sp.get('nfc_code') || sp.get('nfc');
+      if (!nfcCode) {
+        try {
+          const body = await request.json();
+          nfcCode = body && (body.nfcid || body.nfcCode || body.nfc || body.nfc_code);
+        } catch {}
+      }
+      if (!nfcCode) {
+        return json({ error: 'Missing nfcid parameter' }, { status: 400 });
+      }
+      return handleVerify(request, env, String(nfcCode).trim());
     }
+
+    // path-based /api/verify/:code disabled; use /api/verify?nfcid=XXX
 
     if (url.pathname.startsWith('/api/test/ip-location')) {
       return handleTestIP(request);
@@ -290,9 +302,10 @@ export default {
     // Static page path rewrites for nicer URLs
     if (env.ASSETS && typeof env.ASSETS.fetch === 'function') {
       const rewriteMap = new Map([
+        ['/', '/index.html'],
         ['/admin-login', '/admin-login.html'],
         ['/admin-dashboard', '/admin-dashboard.html'],
-        ['/verify', '/index.html']
+        ['/verify', '/verify.html']
       ]);
       const target = rewriteMap.get(url.pathname);
       if (target) {
@@ -300,12 +313,7 @@ export default {
         rewritten.pathname = target;
         return env.ASSETS.fetch(new Request(rewritten.toString(), request));
       }
-      // Dynamic rewrite: /verify/:nfcCode -> /verify.html
-      if (url.pathname.startsWith('/verify/')) {
-        const rewritten = new URL(request.url);
-        rewritten.pathname = '/verify.html';
-        return env.ASSETS.fetch(new Request(rewritten.toString(), request));
-      }
+      // dynamic rewrite for /verify/:code disabled; only /verify and ?nfcid=XXX are supported
       return env.ASSETS.fetch(request);
     }
 

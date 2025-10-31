@@ -188,13 +188,12 @@ async function verifyProduct() {
     showLoadingAnimation(modalBody);
 
     try {
-        const response = await fetch(`/api/verify/${nfcCode}`, {
+        const response = await fetch(`/api/verify?nfcid=${encodeURIComponent(nfcCode)}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-
         const data = await response.json();
         
         // Wait a bit for loading effect
@@ -307,12 +306,19 @@ document.addEventListener('DOMContentLoaded', function() {
             closeVerificationModal();
         }
     });
+    const url = new URL(window.location.href);
+    const q = url.searchParams.get('nfcid') || url.searchParams.get('nfc_code') || url.searchParams.get('nfc');
+    if (q) {
+        const input = document.getElementById('nfcCode');
+        input.value = q.trim();
+        verifyProduct();
+    }
 });
 
 // Helper function to generate NFC link (for admin)
 function generateNFCLink(nfcCode) {
     const baseUrl = window.location.origin;
-    return `${baseUrl}/verify/${nfcCode}`;
+    return `${baseUrl}/?nfcid=${encodeURIComponent(nfcCode)}`;
 }
 
 // Copy link to clipboard

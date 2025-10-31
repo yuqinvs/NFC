@@ -23,8 +23,9 @@ name = "nfc-verification-worker"
 main = "worker/index.js"
 compatibility_date = "2024-10-31"
 workers_dev = true
-logpush = true
-node_compat = true
+# logpush disabled for non-Enterprise accounts
+# logpush = false
+compatibility_flags = ["nodejs_compat"]
 
 routes = [
   { pattern = "verify.plearance.com/*", zone_name = "plearance.com" }
@@ -46,9 +47,10 @@ database_id = "<your-d1-id>"
 migrations_dir = "migrations"
 ```
 
-- `node_compat`：启用 Node 兼容以支持 XLSX 的运行时需求
+- `compatibility_flags = ["nodejs_compat"]`：替代旧的 `node_compat` 以消除弃用警告
 - `[assets]`：自动服务 `public/` 静态资源（支持 `/admin-login.html` 等）
 - 路径重写：Worker 内置将 `/admin-login` 重写到 `/admin-login.html`，`/admin-dashboard` 重写到 `/admin-dashboard.html`
+- 注意：`logpush` 为企业功能，标准账户请勿启用，否则部署会报错（代码 10023）
 
 ## 4. 管理端 API（Worker）
 - `POST /api/admin/login`

@@ -423,46 +423,119 @@ app.post('/api/verify/:nfcCode', (req, res) => {
             db.run('INSERT INTO scan_records (nfc_code, ip_address, country) VALUES (?, ?, ?)', 
                 [nfcCode, clientIP, country], function(err) {
                 if (err) {
-                    console.error('Failed to record scan:', err);
-                }
-            });
-
-            // Check if this is the first scan for this product (no country bound yet)
-            if (!product.country) {
-                // First scan - bind country to this product
-                db.run('UPDATE products SET country = ?, country_name = ? WHERE nfc_code = ?', 
-                    [country, countryName, nfcCode], function(err) {
-                    if (err) {
-                        console.error('Failed to bind country to product:', err);
-                    }
-                });
-            }
-
-            // Get total scan count for this product
-            db.get('SELECT COUNT(*) as total_scans FROM scan_records WHERE nfc_code = ?', 
-                [nfcCode], (err, scanResult) => {
-                if (err) {
-                    return handleError(res, err, 'Failed to get scan count');
+                    return handleError(res, err, 'Failed to record scan');
                 }
 
-                const totalScans = scanResult ? scanResult.total_scans : 1;
                 const boundCountry = product.country || country;
                 const boundCountryName = product.country_name || countryName;
+                
+                // Bind country on first scan
+                if (!product.country) {
+                    db.run('UPDATE products SET country = ?, country_name = ? WHERE nfc_code = ?', 
+                        [country, countryName, nfcCode], function(updateErr) {
+                        if (updateErr) {
+                            return handleError(res, updateErr, 'Failed to bind country');
+                        }
+                        finalize();
+                    });
+                } else {
+                    finalize();
+                }
 
-                // Return product information
-                res.json({
-                    productName: product.product_name,
-                    isAuthentic: Boolean(product.is_authentic),
-                    scanCount: totalScans,
-                    country: boundCountry,
-                    countryName: boundCountryName,
-                    timestamp: new Date().toISOString()
-                });
+                function finalize() {
+                    db.get('SELECT COUNT(*) as total_scans FROM scan_records WHERE nfc_code = ?', [nfcCode], (countErr, row) => {
+                        if (countErr) {
+                            return handleError(res, countErr, 'Failed to count scans');
+                        }
+                        res.json({
+                            productName: product.product_name,
+                            isAuthentic: Boolean(product.is_authentic),
+                            scanCount: row ? row.total_scans : 1,
+                            country: boundCountry,
+                            countryName: boundCountryName,
+                            timestamp: new Date().toISOString()
+                        });
+                    });
+                }
             });
         });
     } catch (error) {
         handleError(res, error);
     }
+});
+
+// NEW: NFC verification via query/body (nfcid)
+app.post('/api/verify', (req, res) => {
+    try {
+        const rawCode = req.query.nfcid || req.query.nfc || req.query.nfc_code || (req.body && (req.body.nfcid || req.body.nfc || req.body.nfc_code));
+        const nfcCode = validateAndSanitizeInput(rawCode, 'nfc_code');
+        if (!nfcCode) {
+            return res.status(400).json({ error: 'nfcid cannot be empty' });
+        }
+
+        const clientIP = getClientIP(req);
+        const geoInfo = getCountryFromIP(clientIP);
+        const country = geoInfo.country;
+        const countryName = geoInfo.countryName;
+
+        db.get('SELECT * FROM products WHERE nfc_code = ?', [nfcCode], (err, product) => {
+            if (err) {
+                return handleError(res, err, 'Database query error');
+            }
+            if (!product) {
+                return res.json({
+                    productName: 'Unknown Product',
+                    isAuthentic: false,
+                    message: 'This product failed verification and may be counterfeit',
+                    timestamp: new Date().toISOString()
+                });
+            }
+
+            db.run('INSERT INTO scan_records (nfc_code, ip_address, country) VALUES (?, ?, ?)', 
+                [nfcCode, clientIP, country], function(err) {
+                if (err) {
+                    return handleError(res, err, 'Failed to record scan');
+                }
+
+                const boundCountry = product.country || country;
+                const boundCountryName = product.country_name || countryName;
+                if (!product.country) {
+                    db.run('UPDATE products SET country = ?, country_name = ? WHERE nfc_code = ?', 
+                        [country, countryName, nfcCode], function(updateErr) {
+                        if (updateErr) {
+                            return handleError(res, updateErr, 'Failed to bind country');
+                        }
+                        finalize();
+                    });
+                } else {
+                    finalize();
+                }
+
+                function finalize() {
+                    db.get('SELECT COUNT(*) as total_scans FROM scan_records WHERE nfc_code = ?', [nfcCode], (countErr, row) => {
+                        if (countErr) {
+                            return handleError(res, countErr, 'Failed to count scans');
+                        }
+                        res.json({
+                            productName: product.product_name,
+                            isAuthentic: Boolean(product.is_authentic),
+                            scanCount: row ? row.total_scans : 1,
+                            country: boundCountry,
+                            countryName: boundCountryName,
+                            timestamp: new Date().toISOString()
+                        });
+                    });
+                }
+            });
+        });
+    } catch (error) {
+        handleError(res, error);
+    }
+});
+
+// Serve verify page for query-based links
+app.get('/verify', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'verify.html'));
 });
 
 // Admin login API

@@ -40,41 +40,39 @@
 
     <script>
         // Get NFC code from URL and auto-verify
-        window.onload = function() {
-            const pathParts = window.location.pathname.split('/');
-            const nfcCode = pathParts[pathParts.length - 1];
-            
-            if (nfcCode && nfcCode !== 'verify.html') {
-                verifyProductDirect(nfcCode);
-            } else {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('verificationResult').innerHTML = 
-                    '<div class="error"><h3>❌ Invalid NFC Code</h3><p>Please check your NFC tag or link.</p></div>';
-                document.getElementById('verificationResult').style.display = 'block';
+        window.onload = async function() {
+            const url = new URL(window.location.href);
+            const nfcCode = url.searchParams.get('nfcid') || url.searchParams.get('nfc_code') || url.searchParams.get('nfc');
+            if (!nfcCode) {
+              showError('缺少 NFC 编码，请使用 ?nfcid=xxx 格式的链接');
+              return;
             }
+            await verifyProductDirect(nfcCode);
         };
 
         async function verifyProductDirect(nfcCode) {
             try {
-                const response = await fetch(`/api/verify/${nfcCode}`, {
+                const response = await fetch(`/api/verify?nfcid=${encodeURIComponent(nfcCode)}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
 
-                const data = await response.json();
+                const data = await response.json().catch(() => null);
                 
                 document.getElementById('loading').style.display = 'none';
                 
-                if (response.ok) {
+                if (response.ok && data) {
                     displayVerificationResult(data);
                 } else {
-                    displayError(data.error || 'Verification failed');
+                    const message = (data && (data.error || data.message)) || `Status ${response.status}`;
+                    const details = data && data.details ? data.details : '';
+                    displayError(message, details);
                 }
             } catch (error) {
                 document.getElementById('loading').style.display = 'none';
-                displayError('Network error, please try again later');
+                displayError('Network error, please try again later', error && error.message ? error.message : '');
             }
         }
 
@@ -100,7 +98,7 @@
                         </div>
                         <div class="detail-item">
                             <span class="label">Regional Ranking:</span>
-                            <span class="value">#${data.countryRank} user</span>
+                            <span class="value">#${data.countryRank || 1} user</span>
                         </div>
                         <div class="detail-item">
                             <span class="label">Verification Time:</span>
@@ -120,12 +118,13 @@
             resultDiv.style.display = 'block';
         }
 
-        function displayError(message) {
+        function displayError(message, details = '') {
             const resultDiv = document.getElementById('verificationResult');
             resultDiv.innerHTML = `
                 <div class="error">
                     <h3>❌ Verification Failed</h3>
                     <p>${message}</p>
+                    ${details ? `<pre style="white-space:pre-wrap;word-break:break-all;">${details}</pre>` : ''}
                 </div>
             `;
             resultDiv.style.display = 'block';

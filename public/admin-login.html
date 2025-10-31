@@ -48,13 +48,13 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('error');
-            
+            errorDiv.style.display = 'none';
+
             try {
                 const response = await fetch('/api/admin/login', {
                     method: 'POST',
@@ -64,19 +64,17 @@
                     body: JSON.stringify({ username, password })
                 });
 
-                const data = await response.json();
-                
-                if (response.ok) {
-                    // Save token to localStorage
+                const data = await response.json().catch(() => null);
+
+                if (response.ok && data && data.token) {
                     localStorage.setItem('adminToken', data.token);
-                    // Redirect to admin dashboard
                     window.location.href = '/admin-dashboard.html';
                 } else {
-                    errorDiv.innerHTML = `<h3>❌ Login Failed</h3><p>${data.error}</p>`;
+                    errorDiv.innerHTML = `<h3>❌ Login Failed</h3><p>${(data && (data.error || data.message)) || `Status ${response.status}`}</p>`;
                     errorDiv.style.display = 'block';
                 }
             } catch (error) {
-                errorDiv.innerHTML = '<h3>❌ Network Error</h3><p>Please try again later</p>';
+                errorDiv.innerHTML = `<h3>❌ Network Error</h3><p>${error && error.message ? error.message : 'Please try again later'}</p>`;
                 errorDiv.style.display = 'block';
             }
         });
@@ -92,7 +90,7 @@
                 if (response.ok) {
                     window.location.href = '/admin-dashboard.html';
                 }
-            });
+            }).catch(() => {});
         }
     </script>
 </body>
