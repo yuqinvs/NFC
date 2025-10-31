@@ -11,7 +11,7 @@
     "pages:deploy": "wrangler pages deploy public"
   },
   "dependencies": {
-    "itty-router": "^4.0.0"
+    "itty-router": "^4.2.2"
   },
   "devDependencies": {
     "wrangler": "^3.0.0"
