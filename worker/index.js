@@ -125,10 +125,16 @@ async function handleAdminAddProduct(request, env) {
   } catch {}
   const { nfcCode, productName, isAuthentic } = body;
   if (!nfcCode || !productName) return json({ error: 'nfcCode and productName are required' }, { status: 400 });
-  const authentic = (String(isAuthentic ?? '1').trim() === '1') ? 1 : 0;
+  const authentic = coerceAuthenticFlag(isAuthentic);
   try {
     await ensureSchema(env);
-    await env.DB.prepare('INSERT OR IGNORE INTO products (nfc_code, product_name, is_authentic) VALUES (?, ?, ?)')
+    await env.DB.prepare(
+      `INSERT INTO products (nfc_code, product_name, is_authentic)
+       VALUES (?, ?, ?)
+       ON CONFLICT(nfc_code) DO UPDATE SET
+         product_name = excluded.product_name,
+         is_authentic = excluded.is_authentic`
+    )
       .bind(String(nfcCode).trim(), String(productName).trim(), authentic)
       .run();
     return json({ success: true });
