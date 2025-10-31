@@ -30,7 +30,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: d1 migrations apply NFC_DB --remote
+          command: d1 migrations apply nfc-verification-worker --remote
 
       - name: Seed D1 data (optional)
         if: ${{ hashFiles('migrations/0003_seed_from_sqlite.sql') != '' }}
@@ -38,7 +38,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: d1 execute NFC_DB --remote --file=./migrations/0003_seed_from_sqlite.sql
+          command: d1 execute nfc-verification-worker --remote --file=./migrations/0003_seed_from_sqlite.sql
 
       - name: Publish Worker with Wrangler
         uses: cloudflare/wrangler-action@v3
