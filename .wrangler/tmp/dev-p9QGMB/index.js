@@ -1,5 +1,6 @@
 var __defProp = Object.defineProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 var __esm = (fn, res) => function __init() {
   return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
@@ -8,15 +9,19 @@ var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
 
-// .wrangler/tmp/bundle-JQcNwH/strip-cf-connecting-ip-header.js
-function stripCfConnectingIPHeader(input, init2) {
-  const request = new Request(input, init2);
+// .wrangler/tmp/bundle-WDk9Cs/strip-cf-connecting-ip-header.js
+function stripCfConnectingIPHeader(input, init) {
+  const request = new Request(input, init);
   request.headers.delete("CF-Connecting-IP");
   return request;
 }
 var init_strip_cf_connecting_ip_header = __esm({
-  ".wrangler/tmp/bundle-JQcNwH/strip-cf-connecting-ip-header.js"() {
+  ".wrangler/tmp/bundle-WDk9Cs/strip-cf-connecting-ip-header.js"() {
     __name(stripCfConnectingIPHeader, "stripCfConnectingIPHeader");
     globalThis.fetch = new Proxy(globalThis.fetch, {
       apply(target, thisArg, argArray) {
@@ -28,1933 +33,1020 @@ var init_strip_cf_connecting_ip_header = __esm({
   }
 });
 
-// node_modules/@esbuild-plugins/node-globals-polyfill/process.js
-function defaultSetTimout() {
-  throw new Error("setTimeout has not been defined");
+// node_modules/unenv/dist/runtime/_internal/utils.mjs
+function createNotImplementedError(name) {
+  return new Error(`[unenv] ${name} is not implemented yet!`);
 }
-function defaultClearTimeout() {
-  throw new Error("clearTimeout has not been defined");
+function notImplemented(name) {
+  const fn = /* @__PURE__ */ __name(() => {
+    throw createNotImplementedError(name);
+  }, "fn");
+  return Object.assign(fn, { __unenv__: true });
 }
-function runTimeout(fun) {
-  if (cachedSetTimeout === setTimeout) {
-    return setTimeout(fun, 0);
-  }
-  if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-    cachedSetTimeout = setTimeout;
-    return setTimeout(fun, 0);
-  }
-  try {
-    return cachedSetTimeout(fun, 0);
-  } catch (e) {
-    try {
-      return cachedSetTimeout.call(null, fun, 0);
-    } catch (e2) {
-      return cachedSetTimeout.call(this, fun, 0);
+function notImplementedClass(name) {
+  return class {
+    __unenv__ = true;
+    constructor() {
+      throw new Error(`[unenv] ${name} is not implemented yet!`);
     }
-  }
+  };
 }
-function runClearTimeout(marker) {
-  if (cachedClearTimeout === clearTimeout) {
-    return clearTimeout(marker);
-  }
-  if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-    cachedClearTimeout = clearTimeout;
-    return clearTimeout(marker);
-  }
-  try {
-    return cachedClearTimeout(marker);
-  } catch (e) {
-    try {
-      return cachedClearTimeout.call(null, marker);
-    } catch (e2) {
-      return cachedClearTimeout.call(this, marker);
-    }
-  }
-}
-function cleanUpNextTick() {
-  if (!draining || !currentQueue) {
-    return;
-  }
-  draining = false;
-  if (currentQueue.length) {
-    queue = currentQueue.concat(queue);
-  } else {
-    queueIndex = -1;
-  }
-  if (queue.length) {
-    drainQueue();
-  }
-}
-function drainQueue() {
-  if (draining) {
-    return;
-  }
-  var timeout = runTimeout(cleanUpNextTick);
-  draining = true;
-  var len = queue.length;
-  while (len) {
-    currentQueue = queue;
-    queue = [];
-    while (++queueIndex < len) {
-      if (currentQueue) {
-        currentQueue[queueIndex].run();
-      }
-    }
-    queueIndex = -1;
-    len = queue.length;
-  }
-  currentQueue = null;
-  draining = false;
-  runClearTimeout(timeout);
-}
-function nextTick(fun) {
-  var args = new Array(arguments.length - 1);
-  if (arguments.length > 1) {
-    for (var i = 1; i < arguments.length; i++) {
-      args[i - 1] = arguments[i];
-    }
-  }
-  queue.push(new Item(fun, args));
-  if (queue.length === 1 && !draining) {
-    runTimeout(drainQueue);
-  }
-}
-function Item(fun, array) {
-  this.fun = fun;
-  this.array = array;
-}
-function noop() {
-}
-function binding(name) {
-  throw new Error("process.binding is not supported");
-}
-function cwd() {
-  return "/";
-}
-function chdir(dir) {
-  throw new Error("process.chdir is not supported");
-}
-function umask() {
-  return 0;
-}
-function hrtime(previousTimestamp) {
-  var clocktime = performanceNow.call(performance) * 1e-3;
-  var seconds = Math.floor(clocktime);
-  var nanoseconds = Math.floor(clocktime % 1 * 1e9);
-  if (previousTimestamp) {
-    seconds = seconds - previousTimestamp[0];
-    nanoseconds = nanoseconds - previousTimestamp[1];
-    if (nanoseconds < 0) {
-      seconds--;
-      nanoseconds += 1e9;
-    }
-  }
-  return [seconds, nanoseconds];
-}
-function uptime() {
-  var currentTime = /* @__PURE__ */ new Date();
-  var dif = currentTime - startTime;
-  return dif / 1e3;
-}
-var cachedSetTimeout, cachedClearTimeout, queue, draining, currentQueue, queueIndex, title, platform, browser, env, argv, version, versions, release, config, on, addListener, once, off, removeListener, removeAllListeners, emit, performance, performanceNow, startTime, process, defines;
-var init_process = __esm({
-  "node_modules/@esbuild-plugins/node-globals-polyfill/process.js"() {
-    __name(defaultSetTimout, "defaultSetTimout");
-    __name(defaultClearTimeout, "defaultClearTimeout");
-    cachedSetTimeout = defaultSetTimout;
-    cachedClearTimeout = defaultClearTimeout;
-    if (typeof globalThis.setTimeout === "function") {
-      cachedSetTimeout = setTimeout;
-    }
-    if (typeof globalThis.clearTimeout === "function") {
-      cachedClearTimeout = clearTimeout;
-    }
-    __name(runTimeout, "runTimeout");
-    __name(runClearTimeout, "runClearTimeout");
-    queue = [];
-    draining = false;
-    queueIndex = -1;
-    __name(cleanUpNextTick, "cleanUpNextTick");
-    __name(drainQueue, "drainQueue");
-    __name(nextTick, "nextTick");
-    __name(Item, "Item");
-    Item.prototype.run = function() {
-      this.fun.apply(null, this.array);
-    };
-    title = "browser";
-    platform = "browser";
-    browser = true;
-    env = {};
-    argv = [];
-    version = "";
-    versions = {};
-    release = {};
-    config = {};
-    __name(noop, "noop");
-    on = noop;
-    addListener = noop;
-    once = noop;
-    off = noop;
-    removeListener = noop;
-    removeAllListeners = noop;
-    emit = noop;
-    __name(binding, "binding");
-    __name(cwd, "cwd");
-    __name(chdir, "chdir");
-    __name(umask, "umask");
-    performance = globalThis.performance || {};
-    performanceNow = performance.now || performance.mozNow || performance.msNow || performance.oNow || performance.webkitNow || function() {
-      return (/* @__PURE__ */ new Date()).getTime();
-    };
-    __name(hrtime, "hrtime");
-    startTime = /* @__PURE__ */ new Date();
-    __name(uptime, "uptime");
-    process = {
-      nextTick,
-      title,
-      browser,
-      env,
-      argv,
-      version,
-      versions,
-      on,
-      addListener,
-      once,
-      off,
-      removeListener,
-      removeAllListeners,
-      emit,
-      binding,
-      cwd,
-      chdir,
-      umask,
-      hrtime,
-      platform,
-      release,
-      config,
-      uptime
-    };
-    defines = {};
-    Object.keys(defines).forEach((key) => {
-      const segs = key.split(".");
-      let target = process;
-      for (let i = 0; i < segs.length; i++) {
-        const seg = segs[i];
-        if (i === segs.length - 1) {
-          target[seg] = defines[key];
-        } else {
-          target = target[seg] || (target[seg] = {});
-        }
-      }
-    });
-  }
-});
-
-// node_modules/@esbuild-plugins/node-globals-polyfill/Buffer.js
-function init() {
-  inited = true;
-  var code = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-  for (var i = 0, len = code.length; i < len; ++i) {
-    lookup[i] = code[i];
-    revLookup[code.charCodeAt(i)] = i;
-  }
-  revLookup["-".charCodeAt(0)] = 62;
-  revLookup["_".charCodeAt(0)] = 63;
-}
-function base64toByteArray(b64) {
-  if (!inited) {
-    init();
-  }
-  var i, j, l, tmp, placeHolders, arr;
-  var len = b64.length;
-  if (len % 4 > 0) {
-    throw new Error("Invalid string. Length must be a multiple of 4");
-  }
-  placeHolders = b64[len - 2] === "=" ? 2 : b64[len - 1] === "=" ? 1 : 0;
-  arr = new Arr(len * 3 / 4 - placeHolders);
-  l = placeHolders > 0 ? len - 4 : len;
-  var L = 0;
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
-    tmp = revLookup[b64.charCodeAt(i)] << 18 | revLookup[b64.charCodeAt(i + 1)] << 12 | revLookup[b64.charCodeAt(i + 2)] << 6 | revLookup[b64.charCodeAt(i + 3)];
-    arr[L++] = tmp >> 16 & 255;
-    arr[L++] = tmp >> 8 & 255;
-    arr[L++] = tmp & 255;
-  }
-  if (placeHolders === 2) {
-    tmp = revLookup[b64.charCodeAt(i)] << 2 | revLookup[b64.charCodeAt(i + 1)] >> 4;
-    arr[L++] = tmp & 255;
-  } else if (placeHolders === 1) {
-    tmp = revLookup[b64.charCodeAt(i)] << 10 | revLookup[b64.charCodeAt(i + 1)] << 4 | revLookup[b64.charCodeAt(i + 2)] >> 2;
-    arr[L++] = tmp >> 8 & 255;
-    arr[L++] = tmp & 255;
-  }
-  return arr;
-}
-function tripletToBase64(num) {
-  return lookup[num >> 18 & 63] + lookup[num >> 12 & 63] + lookup[num >> 6 & 63] + lookup[num & 63];
-}
-function encodeChunk(uint8, start, end) {
-  var tmp;
-  var output = [];
-  for (var i = start; i < end; i += 3) {
-    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + uint8[i + 2];
-    output.push(tripletToBase64(tmp));
-  }
-  return output.join("");
-}
-function base64fromByteArray(uint8) {
-  if (!inited) {
-    init();
-  }
-  var tmp;
-  var len = uint8.length;
-  var extraBytes = len % 3;
-  var output = "";
-  var parts = [];
-  var maxChunkLength = 16383;
-  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(
-      encodeChunk(
-        uint8,
-        i,
-        i + maxChunkLength > len2 ? len2 : i + maxChunkLength
-      )
-    );
-  }
-  if (extraBytes === 1) {
-    tmp = uint8[len - 1];
-    output += lookup[tmp >> 2];
-    output += lookup[tmp << 4 & 63];
-    output += "==";
-  } else if (extraBytes === 2) {
-    tmp = (uint8[len - 2] << 8) + uint8[len - 1];
-    output += lookup[tmp >> 10];
-    output += lookup[tmp >> 4 & 63];
-    output += lookup[tmp << 2 & 63];
-    output += "=";
-  }
-  parts.push(output);
-  return parts.join("");
-}
-function kMaxLength() {
-  return Buffer2.TYPED_ARRAY_SUPPORT ? 2147483647 : 1073741823;
-}
-function createBuffer(that, length) {
-  if (kMaxLength() < length) {
-    throw new RangeError("Invalid typed array length");
-  }
-  if (Buffer2.TYPED_ARRAY_SUPPORT) {
-    that = new Uint8Array(length);
-    that.__proto__ = Buffer2.prototype;
-  } else {
-    if (that === null) {
-      that = new Buffer2(length);
-    }
-    that.length = length;
-  }
-  return that;
-}
-function Buffer2(arg, encodingOrOffset, length) {
-  if (!Buffer2.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer2)) {
-    return new Buffer2(arg, encodingOrOffset, length);
-  }
-  if (typeof arg === "number") {
-    if (typeof encodingOrOffset === "string") {
-      throw new Error(
-        "If encoding is specified then the first argument must be a string"
-      );
-    }
-    return allocUnsafe(this, arg);
-  }
-  return from(this, arg, encodingOrOffset, length);
-}
-function from(that, value, encodingOrOffset, length) {
-  if (typeof value === "number") {
-    throw new TypeError('"value" argument must not be a number');
-  }
-  if (typeof ArrayBuffer !== "undefined" && value instanceof ArrayBuffer) {
-    return fromArrayBuffer(that, value, encodingOrOffset, length);
-  }
-  if (typeof value === "string") {
-    return fromString(that, value, encodingOrOffset);
-  }
-  return fromObject(that, value);
-}
-function assertSize(size) {
-  if (typeof size !== "number") {
-    throw new TypeError('"size" argument must be a number');
-  } else if (size < 0) {
-    throw new RangeError('"size" argument must not be negative');
-  }
-}
-function alloc(that, size, fill3, encoding) {
-  assertSize(size);
-  if (size <= 0) {
-    return createBuffer(that, size);
-  }
-  if (fill3 !== void 0) {
-    return typeof encoding === "string" ? createBuffer(that, size).fill(fill3, encoding) : createBuffer(that, size).fill(fill3);
-  }
-  return createBuffer(that, size);
-}
-function allocUnsafe(that, size) {
-  assertSize(size);
-  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0);
-  if (!Buffer2.TYPED_ARRAY_SUPPORT) {
-    for (var i = 0; i < size; ++i) {
-      that[i] = 0;
-    }
-  }
-  return that;
-}
-function fromString(that, string, encoding) {
-  if (typeof encoding !== "string" || encoding === "") {
-    encoding = "utf8";
-  }
-  if (!Buffer2.isEncoding(encoding)) {
-    throw new TypeError('"encoding" must be a valid string encoding');
-  }
-  var length = byteLength(string, encoding) | 0;
-  that = createBuffer(that, length);
-  var actual = that.write(string, encoding);
-  if (actual !== length) {
-    that = that.slice(0, actual);
-  }
-  return that;
-}
-function fromArrayLike(that, array) {
-  var length = array.length < 0 ? 0 : checked(array.length) | 0;
-  that = createBuffer(that, length);
-  for (var i = 0; i < length; i += 1) {
-    that[i] = array[i] & 255;
-  }
-  return that;
-}
-function fromArrayBuffer(that, array, byteOffset, length) {
-  array.byteLength;
-  if (byteOffset < 0 || array.byteLength < byteOffset) {
-    throw new RangeError("'offset' is out of bounds");
-  }
-  if (array.byteLength < byteOffset + (length || 0)) {
-    throw new RangeError("'length' is out of bounds");
-  }
-  if (byteOffset === void 0 && length === void 0) {
-    array = new Uint8Array(array);
-  } else if (length === void 0) {
-    array = new Uint8Array(array, byteOffset);
-  } else {
-    array = new Uint8Array(array, byteOffset, length);
-  }
-  if (Buffer2.TYPED_ARRAY_SUPPORT) {
-    that = array;
-    that.__proto__ = Buffer2.prototype;
-  } else {
-    that = fromArrayLike(that, array);
-  }
-  return that;
-}
-function fromObject(that, obj) {
-  if (internalIsBuffer(obj)) {
-    var len = checked(obj.length) | 0;
-    that = createBuffer(that, len);
-    if (that.length === 0) {
-      return that;
-    }
-    obj.copy(that, 0, 0, len);
-    return that;
-  }
-  if (obj) {
-    if (typeof ArrayBuffer !== "undefined" && obj.buffer instanceof ArrayBuffer || "length" in obj) {
-      if (typeof obj.length !== "number" || isnan(obj.length)) {
-        return createBuffer(that, 0);
-      }
-      return fromArrayLike(that, obj);
-    }
-    if (obj.type === "Buffer" && Array.isArray(obj.data)) {
-      return fromArrayLike(that, obj.data);
-    }
-  }
-  throw new TypeError(
-    "First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object."
-  );
-}
-function checked(length) {
-  if (length >= kMaxLength()) {
-    throw new RangeError(
-      "Attempt to allocate Buffer larger than maximum size: 0x" + kMaxLength().toString(16) + " bytes"
-    );
-  }
-  return length | 0;
-}
-function internalIsBuffer(b) {
-  return !!(b != null && b._isBuffer);
-}
-function byteLength(string, encoding) {
-  if (internalIsBuffer(string)) {
-    return string.length;
-  }
-  if (typeof ArrayBuffer !== "undefined" && typeof ArrayBuffer.isView === "function" && (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
-    return string.byteLength;
-  }
-  if (typeof string !== "string") {
-    string = "" + string;
-  }
-  var len = string.length;
-  if (len === 0)
-    return 0;
-  var loweredCase = false;
-  for (; ; ) {
-    switch (encoding) {
-      case "ascii":
-      case "latin1":
-      case "binary":
-        return len;
-      case "utf8":
-      case "utf-8":
-      case void 0:
-        return utf8ToBytes(string).length;
-      case "ucs2":
-      case "ucs-2":
-      case "utf16le":
-      case "utf-16le":
-        return len * 2;
-      case "hex":
-        return len >>> 1;
-      case "base64":
-        return base64ToBytes(string).length;
-      default:
-        if (loweredCase)
-          return utf8ToBytes(string).length;
-        encoding = ("" + encoding).toLowerCase();
-        loweredCase = true;
-    }
-  }
-}
-function slowToString(encoding, start, end) {
-  var loweredCase = false;
-  if (start === void 0 || start < 0) {
-    start = 0;
-  }
-  if (start > this.length) {
-    return "";
-  }
-  if (end === void 0 || end > this.length) {
-    end = this.length;
-  }
-  if (end <= 0) {
-    return "";
-  }
-  end >>>= 0;
-  start >>>= 0;
-  if (end <= start) {
-    return "";
-  }
-  if (!encoding)
-    encoding = "utf8";
-  while (true) {
-    switch (encoding) {
-      case "hex":
-        return hexSlice(this, start, end);
-      case "utf8":
-      case "utf-8":
-        return utf8Slice(this, start, end);
-      case "ascii":
-        return asciiSlice(this, start, end);
-      case "latin1":
-      case "binary":
-        return latin1Slice(this, start, end);
-      case "base64":
-        return base64Slice(this, start, end);
-      case "ucs2":
-      case "ucs-2":
-      case "utf16le":
-      case "utf-16le":
-        return utf16leSlice(this, start, end);
-      default:
-        if (loweredCase)
-          throw new TypeError("Unknown encoding: " + encoding);
-        encoding = (encoding + "").toLowerCase();
-        loweredCase = true;
-    }
-  }
-}
-function swap(b, n, m) {
-  var i = b[n];
-  b[n] = b[m];
-  b[m] = i;
-}
-function bidirectionalIndexOf(buffer, val, byteOffset, encoding, dir) {
-  if (buffer.length === 0)
-    return -1;
-  if (typeof byteOffset === "string") {
-    encoding = byteOffset;
-    byteOffset = 0;
-  } else if (byteOffset > 2147483647) {
-    byteOffset = 2147483647;
-  } else if (byteOffset < -2147483648) {
-    byteOffset = -2147483648;
-  }
-  byteOffset = +byteOffset;
-  if (isNaN(byteOffset)) {
-    byteOffset = dir ? 0 : buffer.length - 1;
-  }
-  if (byteOffset < 0)
-    byteOffset = buffer.length + byteOffset;
-  if (byteOffset >= buffer.length) {
-    if (dir)
-      return -1;
-    else
-      byteOffset = buffer.length - 1;
-  } else if (byteOffset < 0) {
-    if (dir)
-      byteOffset = 0;
-    else
-      return -1;
-  }
-  if (typeof val === "string") {
-    val = Buffer2.from(val, encoding);
-  }
-  if (internalIsBuffer(val)) {
-    if (val.length === 0) {
-      return -1;
-    }
-    return arrayIndexOf(buffer, val, byteOffset, encoding, dir);
-  } else if (typeof val === "number") {
-    val = val & 255;
-    if (Buffer2.TYPED_ARRAY_SUPPORT && typeof Uint8Array.prototype.indexOf === "function") {
-      if (dir) {
-        return Uint8Array.prototype.indexOf.call(
-          buffer,
-          val,
-          byteOffset
-        );
-      } else {
-        return Uint8Array.prototype.lastIndexOf.call(
-          buffer,
-          val,
-          byteOffset
-        );
-      }
-    }
-    return arrayIndexOf(buffer, [val], byteOffset, encoding, dir);
-  }
-  throw new TypeError("val must be string, number or Buffer");
-}
-function arrayIndexOf(arr, val, byteOffset, encoding, dir) {
-  var indexSize = 1;
-  var arrLength = arr.length;
-  var valLength = val.length;
-  if (encoding !== void 0) {
-    encoding = String(encoding).toLowerCase();
-    if (encoding === "ucs2" || encoding === "ucs-2" || encoding === "utf16le" || encoding === "utf-16le") {
-      if (arr.length < 2 || val.length < 2) {
-        return -1;
-      }
-      indexSize = 2;
-      arrLength /= 2;
-      valLength /= 2;
-      byteOffset /= 2;
-    }
-  }
-  function read(buf, i2) {
-    if (indexSize === 1) {
-      return buf[i2];
-    } else {
-      return buf.readUInt16BE(i2 * indexSize);
-    }
-  }
-  __name(read, "read");
-  var i;
-  if (dir) {
-    var foundIndex = -1;
-    for (i = byteOffset; i < arrLength; i++) {
-      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
-        if (foundIndex === -1)
-          foundIndex = i;
-        if (i - foundIndex + 1 === valLength)
-          return foundIndex * indexSize;
-      } else {
-        if (foundIndex !== -1)
-          i -= i - foundIndex;
-        foundIndex = -1;
-      }
-    }
-  } else {
-    if (byteOffset + valLength > arrLength)
-      byteOffset = arrLength - valLength;
-    for (i = byteOffset; i >= 0; i--) {
-      var found = true;
-      for (var j = 0; j < valLength; j++) {
-        if (read(arr, i + j) !== read(val, j)) {
-          found = false;
-          break;
-        }
-      }
-      if (found)
-        return i;
-    }
-  }
-  return -1;
-}
-function hexWrite(buf, string, offset, length) {
-  offset = Number(offset) || 0;
-  var remaining = buf.length - offset;
-  if (!length) {
-    length = remaining;
-  } else {
-    length = Number(length);
-    if (length > remaining) {
-      length = remaining;
-    }
-  }
-  var strLen = string.length;
-  if (strLen % 2 !== 0)
-    throw new TypeError("Invalid hex string");
-  if (length > strLen / 2) {
-    length = strLen / 2;
-  }
-  for (var i = 0; i < length; ++i) {
-    var parsed = parseInt(string.substr(i * 2, 2), 16);
-    if (isNaN(parsed))
-      return i;
-    buf[offset + i] = parsed;
-  }
-  return i;
-}
-function utf8Write(buf, string, offset, length) {
-  return blitBuffer(
-    utf8ToBytes(string, buf.length - offset),
-    buf,
-    offset,
-    length
-  );
-}
-function asciiWrite(buf, string, offset, length) {
-  return blitBuffer(asciiToBytes(string), buf, offset, length);
-}
-function latin1Write(buf, string, offset, length) {
-  return asciiWrite(buf, string, offset, length);
-}
-function base64Write(buf, string, offset, length) {
-  return blitBuffer(base64ToBytes(string), buf, offset, length);
-}
-function ucs2Write(buf, string, offset, length) {
-  return blitBuffer(
-    utf16leToBytes(string, buf.length - offset),
-    buf,
-    offset,
-    length
-  );
-}
-function base64Slice(buf, start, end) {
-  if (start === 0 && end === buf.length) {
-    return base64fromByteArray(buf);
-  } else {
-    return base64fromByteArray(buf.slice(start, end));
-  }
-}
-function utf8Slice(buf, start, end) {
-  end = Math.min(buf.length, end);
-  var res = [];
-  var i = start;
-  while (i < end) {
-    var firstByte = buf[i];
-    var codePoint = null;
-    var bytesPerSequence = firstByte > 239 ? 4 : firstByte > 223 ? 3 : firstByte > 191 ? 2 : 1;
-    if (i + bytesPerSequence <= end) {
-      var secondByte, thirdByte, fourthByte, tempCodePoint;
-      switch (bytesPerSequence) {
-        case 1:
-          if (firstByte < 128) {
-            codePoint = firstByte;
-          }
-          break;
-        case 2:
-          secondByte = buf[i + 1];
-          if ((secondByte & 192) === 128) {
-            tempCodePoint = (firstByte & 31) << 6 | secondByte & 63;
-            if (tempCodePoint > 127) {
-              codePoint = tempCodePoint;
-            }
-          }
-          break;
-        case 3:
-          secondByte = buf[i + 1];
-          thirdByte = buf[i + 2];
-          if ((secondByte & 192) === 128 && (thirdByte & 192) === 128) {
-            tempCodePoint = (firstByte & 15) << 12 | (secondByte & 63) << 6 | thirdByte & 63;
-            if (tempCodePoint > 2047 && (tempCodePoint < 55296 || tempCodePoint > 57343)) {
-              codePoint = tempCodePoint;
-            }
-          }
-          break;
-        case 4:
-          secondByte = buf[i + 1];
-          thirdByte = buf[i + 2];
-          fourthByte = buf[i + 3];
-          if ((secondByte & 192) === 128 && (thirdByte & 192) === 128 && (fourthByte & 192) === 128) {
-            tempCodePoint = (firstByte & 15) << 18 | (secondByte & 63) << 12 | (thirdByte & 63) << 6 | fourthByte & 63;
-            if (tempCodePoint > 65535 && tempCodePoint < 1114112) {
-              codePoint = tempCodePoint;
-            }
-          }
-      }
-    }
-    if (codePoint === null) {
-      codePoint = 65533;
-      bytesPerSequence = 1;
-    } else if (codePoint > 65535) {
-      codePoint -= 65536;
-      res.push(codePoint >>> 10 & 1023 | 55296);
-      codePoint = 56320 | codePoint & 1023;
-    }
-    res.push(codePoint);
-    i += bytesPerSequence;
-  }
-  return decodeCodePointsArray(res);
-}
-function decodeCodePointsArray(codePoints) {
-  var len = codePoints.length;
-  if (len <= MAX_ARGUMENTS_LENGTH) {
-    return String.fromCharCode.apply(String, codePoints);
-  }
-  var res = "";
-  var i = 0;
-  while (i < len) {
-    res += String.fromCharCode.apply(
-      String,
-      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
-    );
-  }
-  return res;
-}
-function asciiSlice(buf, start, end) {
-  var ret = "";
-  end = Math.min(buf.length, end);
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i] & 127);
-  }
-  return ret;
-}
-function latin1Slice(buf, start, end) {
-  var ret = "";
-  end = Math.min(buf.length, end);
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i]);
-  }
-  return ret;
-}
-function hexSlice(buf, start, end) {
-  var len = buf.length;
-  if (!start || start < 0)
-    start = 0;
-  if (!end || end < 0 || end > len)
-    end = len;
-  var out = "";
-  for (var i = start; i < end; ++i) {
-    out += toHex(buf[i]);
-  }
-  return out;
-}
-function utf16leSlice(buf, start, end) {
-  var bytes = buf.slice(start, end);
-  var res = "";
-  for (var i = 0; i < bytes.length; i += 2) {
-    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256);
-  }
-  return res;
-}
-function checkOffset(offset, ext, length) {
-  if (offset % 1 !== 0 || offset < 0)
-    throw new RangeError("offset is not uint");
-  if (offset + ext > length)
-    throw new RangeError("Trying to access beyond buffer length");
-}
-function checkInt(buf, value, offset, ext, max, min) {
-  if (!internalIsBuffer(buf))
-    throw new TypeError('"buffer" argument must be a Buffer instance');
-  if (value > max || value < min)
-    throw new RangeError('"value" argument is out of bounds');
-  if (offset + ext > buf.length)
-    throw new RangeError("Index out of range");
-}
-function objectWriteUInt16(buf, value, offset, littleEndian) {
-  if (value < 0)
-    value = 65535 + value + 1;
-  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
-    buf[offset + i] = (value & 255 << 8 * (littleEndian ? i : 1 - i)) >>> (littleEndian ? i : 1 - i) * 8;
-  }
-}
-function objectWriteUInt32(buf, value, offset, littleEndian) {
-  if (value < 0)
-    value = 4294967295 + value + 1;
-  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
-    buf[offset + i] = value >>> (littleEndian ? i : 3 - i) * 8 & 255;
-  }
-}
-function checkIEEE754(buf, value, offset, ext, max, min) {
-  if (offset + ext > buf.length)
-    throw new RangeError("Index out of range");
-  if (offset < 0)
-    throw new RangeError("Index out of range");
-}
-function writeFloat(buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754(
-      buf,
-      value,
-      offset,
-      4,
-      34028234663852886e22,
-      -34028234663852886e22
-    );
-  }
-  ieee754write(buf, value, offset, littleEndian, 23, 4);
-  return offset + 4;
-}
-function writeDouble(buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754(
-      buf,
-      value,
-      offset,
-      8,
-      17976931348623157e292,
-      -17976931348623157e292
-    );
-  }
-  ieee754write(buf, value, offset, littleEndian, 52, 8);
-  return offset + 8;
-}
-function base64clean(str) {
-  str = stringtrim(str).replace(INVALID_BASE64_RE, "");
-  if (str.length < 2)
-    return "";
-  while (str.length % 4 !== 0) {
-    str = str + "=";
-  }
-  return str;
-}
-function stringtrim(str) {
-  if (str.trim)
-    return str.trim();
-  return str.replace(/^\s+|\s+$/g, "");
-}
-function toHex(n) {
-  if (n < 16)
-    return "0" + n.toString(16);
-  return n.toString(16);
-}
-function utf8ToBytes(string, units) {
-  units = units || Infinity;
-  var codePoint;
-  var length = string.length;
-  var leadSurrogate = null;
-  var bytes = [];
-  for (var i = 0; i < length; ++i) {
-    codePoint = string.charCodeAt(i);
-    if (codePoint > 55295 && codePoint < 57344) {
-      if (!leadSurrogate) {
-        if (codePoint > 56319) {
-          if ((units -= 3) > -1)
-            bytes.push(239, 191, 189);
-          continue;
-        } else if (i + 1 === length) {
-          if ((units -= 3) > -1)
-            bytes.push(239, 191, 189);
-          continue;
-        }
-        leadSurrogate = codePoint;
-        continue;
-      }
-      if (codePoint < 56320) {
-        if ((units -= 3) > -1)
-          bytes.push(239, 191, 189);
-        leadSurrogate = codePoint;
-        continue;
-      }
-      codePoint = (leadSurrogate - 55296 << 10 | codePoint - 56320) + 65536;
-    } else if (leadSurrogate) {
-      if ((units -= 3) > -1)
-        bytes.push(239, 191, 189);
-    }
-    leadSurrogate = null;
-    if (codePoint < 128) {
-      if ((units -= 1) < 0)
-        break;
-      bytes.push(codePoint);
-    } else if (codePoint < 2048) {
-      if ((units -= 2) < 0)
-        break;
-      bytes.push(codePoint >> 6 | 192, codePoint & 63 | 128);
-    } else if (codePoint < 65536) {
-      if ((units -= 3) < 0)
-        break;
-      bytes.push(
-        codePoint >> 12 | 224,
-        codePoint >> 6 & 63 | 128,
-        codePoint & 63 | 128
-      );
-    } else if (codePoint < 1114112) {
-      if ((units -= 4) < 0)
-        break;
-      bytes.push(
-        codePoint >> 18 | 240,
-        codePoint >> 12 & 63 | 128,
-        codePoint >> 6 & 63 | 128,
-        codePoint & 63 | 128
-      );
-    } else {
-      throw new Error("Invalid code point");
-    }
-  }
-  return bytes;
-}
-function asciiToBytes(str) {
-  var byteArray = [];
-  for (var i = 0; i < str.length; ++i) {
-    byteArray.push(str.charCodeAt(i) & 255);
-  }
-  return byteArray;
-}
-function utf16leToBytes(str, units) {
-  var c, hi, lo;
-  var byteArray = [];
-  for (var i = 0; i < str.length; ++i) {
-    if ((units -= 2) < 0)
-      break;
-    c = str.charCodeAt(i);
-    hi = c >> 8;
-    lo = c % 256;
-    byteArray.push(lo);
-    byteArray.push(hi);
-  }
-  return byteArray;
-}
-function base64ToBytes(str) {
-  return base64toByteArray(base64clean(str));
-}
-function blitBuffer(src, dst, offset, length) {
-  for (var i = 0; i < length; ++i) {
-    if (i + offset >= dst.length || i >= src.length)
-      break;
-    dst[i + offset] = src[i];
-  }
-  return i;
-}
-function isnan(val) {
-  return val !== val;
-}
-function isBuffer(obj) {
-  return obj != null && (!!obj._isBuffer || isFastBuffer(obj) || isSlowBuffer(obj));
-}
-function isFastBuffer(obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === "function" && obj.constructor.isBuffer(obj);
-}
-function isSlowBuffer(obj) {
-  return typeof obj.readFloatLE === "function" && typeof obj.slice === "function" && isFastBuffer(obj.slice(0, 0));
-}
-function ieee754read(buffer, offset, isLE, mLen, nBytes) {
-  var e, m;
-  var eLen = nBytes * 8 - mLen - 1;
-  var eMax = (1 << eLen) - 1;
-  var eBias = eMax >> 1;
-  var nBits = -7;
-  var i = isLE ? nBytes - 1 : 0;
-  var d = isLE ? -1 : 1;
-  var s = buffer[offset + i];
-  i += d;
-  e = s & (1 << -nBits) - 1;
-  s >>= -nBits;
-  nBits += eLen;
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {
-  }
-  m = e & (1 << -nBits) - 1;
-  e >>= -nBits;
-  nBits += mLen;
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {
-  }
-  if (e === 0) {
-    e = 1 - eBias;
-  } else if (e === eMax) {
-    return m ? NaN : (s ? -1 : 1) * Infinity;
-  } else {
-    m = m + Math.pow(2, mLen);
-    e = e - eBias;
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
-}
-function ieee754write(buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c;
-  var eLen = nBytes * 8 - mLen - 1;
-  var eMax = (1 << eLen) - 1;
-  var eBias = eMax >> 1;
-  var rt = mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0;
-  var i = isLE ? 0 : nBytes - 1;
-  var d = isLE ? 1 : -1;
-  var s = value < 0 || value === 0 && 1 / value < 0 ? 1 : 0;
-  value = Math.abs(value);
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0;
-    e = eMax;
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2);
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--;
-      c *= 2;
-    }
-    if (e + eBias >= 1) {
-      value += rt / c;
-    } else {
-      value += rt * Math.pow(2, 1 - eBias);
-    }
-    if (value * c >= 2) {
-      e++;
-      c /= 2;
-    }
-    if (e + eBias >= eMax) {
-      m = 0;
-      e = eMax;
-    } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen);
-      e = e + eBias;
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
-      e = 0;
-    }
-  }
-  for (; mLen >= 8; buffer[offset + i] = m & 255, i += d, m /= 256, mLen -= 8) {
-  }
-  e = e << mLen | m;
-  eLen += mLen;
-  for (; eLen > 0; buffer[offset + i] = e & 255, i += d, e /= 256, eLen -= 8) {
-  }
-  buffer[offset + i - d] |= s * 128;
-}
-var lookup, revLookup, Arr, inited, MAX_ARGUMENTS_LENGTH, INVALID_BASE64_RE;
-var init_Buffer = __esm({
-  "node_modules/@esbuild-plugins/node-globals-polyfill/Buffer.js"() {
+var init_utils = __esm({
+  "node_modules/unenv/dist/runtime/_internal/utils.mjs"() {
     init_strip_cf_connecting_ip_header();
     init_modules_watch_stub();
-    init_process();
-    init_buffer();
-    lookup = [];
-    revLookup = [];
-    Arr = typeof Uint8Array !== "undefined" ? Uint8Array : Array;
-    inited = false;
-    __name(init, "init");
-    __name(base64toByteArray, "base64toByteArray");
-    __name(tripletToBase64, "tripletToBase64");
-    __name(encodeChunk, "encodeChunk");
-    __name(base64fromByteArray, "base64fromByteArray");
-    Buffer2.TYPED_ARRAY_SUPPORT = globalThis.TYPED_ARRAY_SUPPORT !== void 0 ? globalThis.TYPED_ARRAY_SUPPORT : true;
-    __name(kMaxLength, "kMaxLength");
-    __name(createBuffer, "createBuffer");
-    __name(Buffer2, "Buffer");
-    Buffer2.poolSize = 8192;
-    Buffer2._augment = function(arr) {
-      arr.__proto__ = Buffer2.prototype;
-      return arr;
-    };
-    __name(from, "from");
-    Buffer2.from = function(value, encodingOrOffset, length) {
-      return from(null, value, encodingOrOffset, length);
-    };
-    Buffer2.kMaxLength = kMaxLength();
-    if (Buffer2.TYPED_ARRAY_SUPPORT) {
-      Buffer2.prototype.__proto__ = Uint8Array.prototype;
-      Buffer2.__proto__ = Uint8Array;
-      if (typeof Symbol !== "undefined" && Symbol.species && Buffer2[Symbol.species] === Buffer2) {
-      }
-    }
-    __name(assertSize, "assertSize");
-    __name(alloc, "alloc");
-    Buffer2.alloc = function(size, fill3, encoding) {
-      return alloc(null, size, fill3, encoding);
-    };
-    __name(allocUnsafe, "allocUnsafe");
-    Buffer2.allocUnsafe = function(size) {
-      return allocUnsafe(null, size);
-    };
-    Buffer2.allocUnsafeSlow = function(size) {
-      return allocUnsafe(null, size);
-    };
-    __name(fromString, "fromString");
-    __name(fromArrayLike, "fromArrayLike");
-    __name(fromArrayBuffer, "fromArrayBuffer");
-    __name(fromObject, "fromObject");
-    __name(checked, "checked");
-    Buffer2.isBuffer = isBuffer;
-    __name(internalIsBuffer, "internalIsBuffer");
-    Buffer2.compare = /* @__PURE__ */ __name(function compare(a, b) {
-      if (!internalIsBuffer(a) || !internalIsBuffer(b)) {
-        throw new TypeError("Arguments must be Buffers");
-      }
-      if (a === b)
-        return 0;
-      var x = a.length;
-      var y = b.length;
-      for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-        if (a[i] !== b[i]) {
-          x = a[i];
-          y = b[i];
-          break;
-        }
-      }
-      if (x < y)
-        return -1;
-      if (y < x)
-        return 1;
-      return 0;
-    }, "compare");
-    Buffer2.isEncoding = /* @__PURE__ */ __name(function isEncoding(encoding) {
-      switch (String(encoding).toLowerCase()) {
-        case "hex":
-        case "utf8":
-        case "utf-8":
-        case "ascii":
-        case "latin1":
-        case "binary":
-        case "base64":
-        case "ucs2":
-        case "ucs-2":
-        case "utf16le":
-        case "utf-16le":
-          return true;
-        default:
-          return false;
-      }
-    }, "isEncoding");
-    Buffer2.concat = /* @__PURE__ */ __name(function concat(list, length) {
-      if (!Array.isArray(list)) {
-        throw new TypeError('"list" argument must be an Array of Buffers');
-      }
-      if (list.length === 0) {
-        return Buffer2.alloc(0);
-      }
-      var i;
-      if (length === void 0) {
-        length = 0;
-        for (i = 0; i < list.length; ++i) {
-          length += list[i].length;
-        }
-      }
-      var buffer = Buffer2.allocUnsafe(length);
-      var pos = 0;
-      for (i = 0; i < list.length; ++i) {
-        var buf = list[i];
-        if (!internalIsBuffer(buf)) {
-          throw new TypeError('"list" argument must be an Array of Buffers');
-        }
-        buf.copy(buffer, pos);
-        pos += buf.length;
-      }
-      return buffer;
-    }, "concat");
-    __name(byteLength, "byteLength");
-    Buffer2.byteLength = byteLength;
-    __name(slowToString, "slowToString");
-    Buffer2.prototype._isBuffer = true;
-    __name(swap, "swap");
-    Buffer2.prototype.swap16 = /* @__PURE__ */ __name(function swap16() {
-      var len = this.length;
-      if (len % 2 !== 0) {
-        throw new RangeError("Buffer size must be a multiple of 16-bits");
-      }
-      for (var i = 0; i < len; i += 2) {
-        swap(this, i, i + 1);
-      }
-      return this;
-    }, "swap16");
-    Buffer2.prototype.swap32 = /* @__PURE__ */ __name(function swap32() {
-      var len = this.length;
-      if (len % 4 !== 0) {
-        throw new RangeError("Buffer size must be a multiple of 32-bits");
-      }
-      for (var i = 0; i < len; i += 4) {
-        swap(this, i, i + 3);
-        swap(this, i + 1, i + 2);
-      }
-      return this;
-    }, "swap32");
-    Buffer2.prototype.swap64 = /* @__PURE__ */ __name(function swap64() {
-      var len = this.length;
-      if (len % 8 !== 0) {
-        throw new RangeError("Buffer size must be a multiple of 64-bits");
-      }
-      for (var i = 0; i < len; i += 8) {
-        swap(this, i, i + 7);
-        swap(this, i + 1, i + 6);
-        swap(this, i + 2, i + 5);
-        swap(this, i + 3, i + 4);
-      }
-      return this;
-    }, "swap64");
-    Buffer2.prototype.toString = /* @__PURE__ */ __name(function toString() {
-      var length = this.length | 0;
-      if (length === 0)
-        return "";
-      if (arguments.length === 0)
-        return utf8Slice(this, 0, length);
-      return slowToString.apply(this, arguments);
-    }, "toString");
-    Buffer2.prototype.equals = /* @__PURE__ */ __name(function equals(b) {
-      if (!internalIsBuffer(b))
-        throw new TypeError("Argument must be a Buffer");
-      if (this === b)
-        return true;
-      return Buffer2.compare(this, b) === 0;
-    }, "equals");
-    Buffer2.prototype.compare = /* @__PURE__ */ __name(function compare2(target, start, end, thisStart, thisEnd) {
-      if (!internalIsBuffer(target)) {
-        throw new TypeError("Argument must be a Buffer");
-      }
-      if (start === void 0) {
-        start = 0;
-      }
-      if (end === void 0) {
-        end = target ? target.length : 0;
-      }
-      if (thisStart === void 0) {
-        thisStart = 0;
-      }
-      if (thisEnd === void 0) {
-        thisEnd = this.length;
-      }
-      if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
-        throw new RangeError("out of range index");
-      }
-      if (thisStart >= thisEnd && start >= end) {
-        return 0;
-      }
-      if (thisStart >= thisEnd) {
-        return -1;
-      }
-      if (start >= end) {
-        return 1;
-      }
-      start >>>= 0;
-      end >>>= 0;
-      thisStart >>>= 0;
-      thisEnd >>>= 0;
-      if (this === target)
-        return 0;
-      var x = thisEnd - thisStart;
-      var y = end - start;
-      var len = Math.min(x, y);
-      var thisCopy = this.slice(thisStart, thisEnd);
-      var targetCopy = target.slice(start, end);
-      for (var i = 0; i < len; ++i) {
-        if (thisCopy[i] !== targetCopy[i]) {
-          x = thisCopy[i];
-          y = targetCopy[i];
-          break;
-        }
-      }
-      if (x < y)
-        return -1;
-      if (y < x)
-        return 1;
-      return 0;
-    }, "compare");
-    __name(bidirectionalIndexOf, "bidirectionalIndexOf");
-    __name(arrayIndexOf, "arrayIndexOf");
-    Buffer2.prototype.includes = /* @__PURE__ */ __name(function includes(val, byteOffset, encoding) {
-      return this.indexOf(val, byteOffset, encoding) !== -1;
-    }, "includes");
-    Buffer2.prototype.indexOf = /* @__PURE__ */ __name(function indexOf(val, byteOffset, encoding) {
-      return bidirectionalIndexOf(this, val, byteOffset, encoding, true);
-    }, "indexOf");
-    Buffer2.prototype.lastIndexOf = /* @__PURE__ */ __name(function lastIndexOf(val, byteOffset, encoding) {
-      return bidirectionalIndexOf(this, val, byteOffset, encoding, false);
-    }, "lastIndexOf");
-    __name(hexWrite, "hexWrite");
-    __name(utf8Write, "utf8Write");
-    __name(asciiWrite, "asciiWrite");
-    __name(latin1Write, "latin1Write");
-    __name(base64Write, "base64Write");
-    __name(ucs2Write, "ucs2Write");
-    Buffer2.prototype.write = /* @__PURE__ */ __name(function write(string, offset, length, encoding) {
-      if (offset === void 0) {
-        encoding = "utf8";
-        length = this.length;
-        offset = 0;
-      } else if (length === void 0 && typeof offset === "string") {
-        encoding = offset;
-        length = this.length;
-        offset = 0;
-      } else if (isFinite(offset)) {
-        offset = offset | 0;
-        if (isFinite(length)) {
-          length = length | 0;
-          if (encoding === void 0)
-            encoding = "utf8";
-        } else {
-          encoding = length;
-          length = void 0;
-        }
-      } else {
-        throw new Error(
-          "Buffer.write(string, encoding, offset[, length]) is no longer supported"
-        );
-      }
-      var remaining = this.length - offset;
-      if (length === void 0 || length > remaining)
-        length = remaining;
-      if (string.length > 0 && (length < 0 || offset < 0) || offset > this.length) {
-        throw new RangeError("Attempt to write outside buffer bounds");
-      }
-      if (!encoding)
-        encoding = "utf8";
-      var loweredCase = false;
-      for (; ; ) {
-        switch (encoding) {
-          case "hex":
-            return hexWrite(this, string, offset, length);
-          case "utf8":
-          case "utf-8":
-            return utf8Write(this, string, offset, length);
-          case "ascii":
-            return asciiWrite(this, string, offset, length);
-          case "latin1":
-          case "binary":
-            return latin1Write(this, string, offset, length);
-          case "base64":
-            return base64Write(this, string, offset, length);
-          case "ucs2":
-          case "ucs-2":
-          case "utf16le":
-          case "utf-16le":
-            return ucs2Write(this, string, offset, length);
-          default:
-            if (loweredCase)
-              throw new TypeError("Unknown encoding: " + encoding);
-            encoding = ("" + encoding).toLowerCase();
-            loweredCase = true;
-        }
-      }
-    }, "write");
-    Buffer2.prototype.toJSON = /* @__PURE__ */ __name(function toJSON() {
-      return {
-        type: "Buffer",
-        data: Array.prototype.slice.call(this._arr || this, 0)
-      };
-    }, "toJSON");
-    __name(base64Slice, "base64Slice");
-    __name(utf8Slice, "utf8Slice");
-    MAX_ARGUMENTS_LENGTH = 4096;
-    __name(decodeCodePointsArray, "decodeCodePointsArray");
-    __name(asciiSlice, "asciiSlice");
-    __name(latin1Slice, "latin1Slice");
-    __name(hexSlice, "hexSlice");
-    __name(utf16leSlice, "utf16leSlice");
-    Buffer2.prototype.slice = /* @__PURE__ */ __name(function slice(start, end) {
-      var len = this.length;
-      start = ~~start;
-      end = end === void 0 ? len : ~~end;
-      if (start < 0) {
-        start += len;
-        if (start < 0)
-          start = 0;
-      } else if (start > len) {
-        start = len;
-      }
-      if (end < 0) {
-        end += len;
-        if (end < 0)
-          end = 0;
-      } else if (end > len) {
-        end = len;
-      }
-      if (end < start)
-        end = start;
-      var newBuf;
-      if (Buffer2.TYPED_ARRAY_SUPPORT) {
-        newBuf = this.subarray(start, end);
-        newBuf.__proto__ = Buffer2.prototype;
-      } else {
-        var sliceLen = end - start;
-        newBuf = new Buffer2(sliceLen, void 0);
-        for (var i = 0; i < sliceLen; ++i) {
-          newBuf[i] = this[i + start];
-        }
-      }
-      return newBuf;
-    }, "slice");
-    __name(checkOffset, "checkOffset");
-    Buffer2.prototype.readUIntLE = /* @__PURE__ */ __name(function readUIntLE(offset, byteLength2, noAssert) {
-      offset = offset | 0;
-      byteLength2 = byteLength2 | 0;
-      if (!noAssert)
-        checkOffset(offset, byteLength2, this.length);
-      var val = this[offset];
-      var mul = 1;
-      var i = 0;
-      while (++i < byteLength2 && (mul *= 256)) {
-        val += this[offset + i] * mul;
-      }
-      return val;
-    }, "readUIntLE");
-    Buffer2.prototype.readUIntBE = /* @__PURE__ */ __name(function readUIntBE(offset, byteLength2, noAssert) {
-      offset = offset | 0;
-      byteLength2 = byteLength2 | 0;
-      if (!noAssert) {
-        checkOffset(offset, byteLength2, this.length);
-      }
-      var val = this[offset + --byteLength2];
-      var mul = 1;
-      while (byteLength2 > 0 && (mul *= 256)) {
-        val += this[offset + --byteLength2] * mul;
-      }
-      return val;
-    }, "readUIntBE");
-    Buffer2.prototype.readUInt8 = /* @__PURE__ */ __name(function readUInt8(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 1, this.length);
-      return this[offset];
-    }, "readUInt8");
-    Buffer2.prototype.readUInt16LE = /* @__PURE__ */ __name(function readUInt16LE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 2, this.length);
-      return this[offset] | this[offset + 1] << 8;
-    }, "readUInt16LE");
-    Buffer2.prototype.readUInt16BE = /* @__PURE__ */ __name(function readUInt16BE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 2, this.length);
-      return this[offset] << 8 | this[offset + 1];
-    }, "readUInt16BE");
-    Buffer2.prototype.readUInt32LE = /* @__PURE__ */ __name(function readUInt32LE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 4, this.length);
-      return (this[offset] | this[offset + 1] << 8 | this[offset + 2] << 16) + this[offset + 3] * 16777216;
-    }, "readUInt32LE");
-    Buffer2.prototype.readUInt32BE = /* @__PURE__ */ __name(function readUInt32BE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 4, this.length);
-      return this[offset] * 16777216 + (this[offset + 1] << 16 | this[offset + 2] << 8 | this[offset + 3]);
-    }, "readUInt32BE");
-    Buffer2.prototype.readIntLE = /* @__PURE__ */ __name(function readIntLE(offset, byteLength2, noAssert) {
-      offset = offset | 0;
-      byteLength2 = byteLength2 | 0;
-      if (!noAssert)
-        checkOffset(offset, byteLength2, this.length);
-      var val = this[offset];
-      var mul = 1;
-      var i = 0;
-      while (++i < byteLength2 && (mul *= 256)) {
-        val += this[offset + i] * mul;
-      }
-      mul *= 128;
-      if (val >= mul)
-        val -= Math.pow(2, 8 * byteLength2);
-      return val;
-    }, "readIntLE");
-    Buffer2.prototype.readIntBE = /* @__PURE__ */ __name(function readIntBE(offset, byteLength2, noAssert) {
-      offset = offset | 0;
-      byteLength2 = byteLength2 | 0;
-      if (!noAssert)
-        checkOffset(offset, byteLength2, this.length);
-      var i = byteLength2;
-      var mul = 1;
-      var val = this[offset + --i];
-      while (i > 0 && (mul *= 256)) {
-        val += this[offset + --i] * mul;
-      }
-      mul *= 128;
-      if (val >= mul)
-        val -= Math.pow(2, 8 * byteLength2);
-      return val;
-    }, "readIntBE");
-    Buffer2.prototype.readInt8 = /* @__PURE__ */ __name(function readInt8(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 1, this.length);
-      if (!(this[offset] & 128))
-        return this[offset];
-      return (255 - this[offset] + 1) * -1;
-    }, "readInt8");
-    Buffer2.prototype.readInt16LE = /* @__PURE__ */ __name(function readInt16LE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 2, this.length);
-      var val = this[offset] | this[offset + 1] << 8;
-      return val & 32768 ? val | 4294901760 : val;
-    }, "readInt16LE");
-    Buffer2.prototype.readInt16BE = /* @__PURE__ */ __name(function readInt16BE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 2, this.length);
-      var val = this[offset + 1] | this[offset] << 8;
-      return val & 32768 ? val | 4294901760 : val;
-    }, "readInt16BE");
-    Buffer2.prototype.readInt32LE = /* @__PURE__ */ __name(function readInt32LE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 4, this.length);
-      return this[offset] | this[offset + 1] << 8 | this[offset + 2] << 16 | this[offset + 3] << 24;
-    }, "readInt32LE");
-    Buffer2.prototype.readInt32BE = /* @__PURE__ */ __name(function readInt32BE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 4, this.length);
-      return this[offset] << 24 | this[offset + 1] << 16 | this[offset + 2] << 8 | this[offset + 3];
-    }, "readInt32BE");
-    Buffer2.prototype.readFloatLE = /* @__PURE__ */ __name(function readFloatLE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 4, this.length);
-      return ieee754read(this, offset, true, 23, 4);
-    }, "readFloatLE");
-    Buffer2.prototype.readFloatBE = /* @__PURE__ */ __name(function readFloatBE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 4, this.length);
-      return ieee754read(this, offset, false, 23, 4);
-    }, "readFloatBE");
-    Buffer2.prototype.readDoubleLE = /* @__PURE__ */ __name(function readDoubleLE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 8, this.length);
-      return ieee754read(this, offset, true, 52, 8);
-    }, "readDoubleLE");
-    Buffer2.prototype.readDoubleBE = /* @__PURE__ */ __name(function readDoubleBE(offset, noAssert) {
-      if (!noAssert)
-        checkOffset(offset, 8, this.length);
-      return ieee754read(this, offset, false, 52, 8);
-    }, "readDoubleBE");
-    __name(checkInt, "checkInt");
-    Buffer2.prototype.writeUIntLE = /* @__PURE__ */ __name(function writeUIntLE(value, offset, byteLength2, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      byteLength2 = byteLength2 | 0;
-      if (!noAssert) {
-        var maxBytes = Math.pow(2, 8 * byteLength2) - 1;
-        checkInt(this, value, offset, byteLength2, maxBytes, 0);
-      }
-      var mul = 1;
-      var i = 0;
-      this[offset] = value & 255;
-      while (++i < byteLength2 && (mul *= 256)) {
-        this[offset + i] = value / mul & 255;
-      }
-      return offset + byteLength2;
-    }, "writeUIntLE");
-    Buffer2.prototype.writeUIntBE = /* @__PURE__ */ __name(function writeUIntBE(value, offset, byteLength2, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      byteLength2 = byteLength2 | 0;
-      if (!noAssert) {
-        var maxBytes = Math.pow(2, 8 * byteLength2) - 1;
-        checkInt(this, value, offset, byteLength2, maxBytes, 0);
-      }
-      var i = byteLength2 - 1;
-      var mul = 1;
-      this[offset + i] = value & 255;
-      while (--i >= 0 && (mul *= 256)) {
-        this[offset + i] = value / mul & 255;
-      }
-      return offset + byteLength2;
-    }, "writeUIntBE");
-    Buffer2.prototype.writeUInt8 = /* @__PURE__ */ __name(function writeUInt8(value, offset, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert)
-        checkInt(this, value, offset, 1, 255, 0);
-      if (!Buffer2.TYPED_ARRAY_SUPPORT)
-        value = Math.floor(value);
-      this[offset] = value & 255;
-      return offset + 1;
-    }, "writeUInt8");
-    __name(objectWriteUInt16, "objectWriteUInt16");
-    Buffer2.prototype.writeUInt16LE = /* @__PURE__ */ __name(function writeUInt16LE(value, offset, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert)
-        checkInt(this, value, offset, 2, 65535, 0);
-      if (Buffer2.TYPED_ARRAY_SUPPORT) {
-        this[offset] = value & 255;
-        this[offset + 1] = value >>> 8;
-      } else {
-        objectWriteUInt16(this, value, offset, true);
-      }
-      return offset + 2;
-    }, "writeUInt16LE");
-    Buffer2.prototype.writeUInt16BE = /* @__PURE__ */ __name(function writeUInt16BE(value, offset, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert)
-        checkInt(this, value, offset, 2, 65535, 0);
-      if (Buffer2.TYPED_ARRAY_SUPPORT) {
-        this[offset] = value >>> 8;
-        this[offset + 1] = value & 255;
-      } else {
-        objectWriteUInt16(this, value, offset, false);
-      }
-      return offset + 2;
-    }, "writeUInt16BE");
-    __name(objectWriteUInt32, "objectWriteUInt32");
-    Buffer2.prototype.writeUInt32LE = /* @__PURE__ */ __name(function writeUInt32LE(value, offset, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert)
-        checkInt(this, value, offset, 4, 4294967295, 0);
-      if (Buffer2.TYPED_ARRAY_SUPPORT) {
-        this[offset + 3] = value >>> 24;
-        this[offset + 2] = value >>> 16;
-        this[offset + 1] = value >>> 8;
-        this[offset] = value & 255;
-      } else {
-        objectWriteUInt32(this, value, offset, true);
-      }
-      return offset + 4;
-    }, "writeUInt32LE");
-    Buffer2.prototype.writeUInt32BE = /* @__PURE__ */ __name(function writeUInt32BE(value, offset, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert)
-        checkInt(this, value, offset, 4, 4294967295, 0);
-      if (Buffer2.TYPED_ARRAY_SUPPORT) {
-        this[offset] = value >>> 24;
-        this[offset + 1] = value >>> 16;
-        this[offset + 2] = value >>> 8;
-        this[offset + 3] = value & 255;
-      } else {
-        objectWriteUInt32(this, value, offset, false);
-      }
-      return offset + 4;
-    }, "writeUInt32BE");
-    Buffer2.prototype.writeIntLE = /* @__PURE__ */ __name(function writeIntLE(value, offset, byteLength2, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert) {
-        var limit = Math.pow(2, 8 * byteLength2 - 1);
-        checkInt(this, value, offset, byteLength2, limit - 1, -limit);
-      }
-      var i = 0;
-      var mul = 1;
-      var sub = 0;
-      this[offset] = value & 255;
-      while (++i < byteLength2 && (mul *= 256)) {
-        if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
-          sub = 1;
-        }
-        this[offset + i] = (value / mul >> 0) - sub & 255;
-      }
-      return offset + byteLength2;
-    }, "writeIntLE");
-    Buffer2.prototype.writeIntBE = /* @__PURE__ */ __name(function writeIntBE(value, offset, byteLength2, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert) {
-        var limit = Math.pow(2, 8 * byteLength2 - 1);
-        checkInt(this, value, offset, byteLength2, limit - 1, -limit);
-      }
-      var i = byteLength2 - 1;
-      var mul = 1;
-      var sub = 0;
-      this[offset + i] = value & 255;
-      while (--i >= 0 && (mul *= 256)) {
-        if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
-          sub = 1;
-        }
-        this[offset + i] = (value / mul >> 0) - sub & 255;
-      }
-      return offset + byteLength2;
-    }, "writeIntBE");
-    Buffer2.prototype.writeInt8 = /* @__PURE__ */ __name(function writeInt8(value, offset, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert)
-        checkInt(this, value, offset, 1, 127, -128);
-      if (!Buffer2.TYPED_ARRAY_SUPPORT)
-        value = Math.floor(value);
-      if (value < 0)
-        value = 255 + value + 1;
-      this[offset] = value & 255;
-      return offset + 1;
-    }, "writeInt8");
-    Buffer2.prototype.writeInt16LE = /* @__PURE__ */ __name(function writeInt16LE(value, offset, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert)
-        checkInt(this, value, offset, 2, 32767, -32768);
-      if (Buffer2.TYPED_ARRAY_SUPPORT) {
-        this[offset] = value & 255;
-        this[offset + 1] = value >>> 8;
-      } else {
-        objectWriteUInt16(this, value, offset, true);
-      }
-      return offset + 2;
-    }, "writeInt16LE");
-    Buffer2.prototype.writeInt16BE = /* @__PURE__ */ __name(function writeInt16BE(value, offset, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert)
-        checkInt(this, value, offset, 2, 32767, -32768);
-      if (Buffer2.TYPED_ARRAY_SUPPORT) {
-        this[offset] = value >>> 8;
-        this[offset + 1] = value & 255;
-      } else {
-        objectWriteUInt16(this, value, offset, false);
-      }
-      return offset + 2;
-    }, "writeInt16BE");
-    Buffer2.prototype.writeInt32LE = /* @__PURE__ */ __name(function writeInt32LE(value, offset, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert)
-        checkInt(this, value, offset, 4, 2147483647, -2147483648);
-      if (Buffer2.TYPED_ARRAY_SUPPORT) {
-        this[offset] = value & 255;
-        this[offset + 1] = value >>> 8;
-        this[offset + 2] = value >>> 16;
-        this[offset + 3] = value >>> 24;
-      } else {
-        objectWriteUInt32(this, value, offset, true);
-      }
-      return offset + 4;
-    }, "writeInt32LE");
-    Buffer2.prototype.writeInt32BE = /* @__PURE__ */ __name(function writeInt32BE(value, offset, noAssert) {
-      value = +value;
-      offset = offset | 0;
-      if (!noAssert)
-        checkInt(this, value, offset, 4, 2147483647, -2147483648);
-      if (value < 0)
-        value = 4294967295 + value + 1;
-      if (Buffer2.TYPED_ARRAY_SUPPORT) {
-        this[offset] = value >>> 24;
-        this[offset + 1] = value >>> 16;
-        this[offset + 2] = value >>> 8;
-        this[offset + 3] = value & 255;
-      } else {
-        objectWriteUInt32(this, value, offset, false);
-      }
-      return offset + 4;
-    }, "writeInt32BE");
-    __name(checkIEEE754, "checkIEEE754");
-    __name(writeFloat, "writeFloat");
-    Buffer2.prototype.writeFloatLE = /* @__PURE__ */ __name(function writeFloatLE(value, offset, noAssert) {
-      return writeFloat(this, value, offset, true, noAssert);
-    }, "writeFloatLE");
-    Buffer2.prototype.writeFloatBE = /* @__PURE__ */ __name(function writeFloatBE(value, offset, noAssert) {
-      return writeFloat(this, value, offset, false, noAssert);
-    }, "writeFloatBE");
-    __name(writeDouble, "writeDouble");
-    Buffer2.prototype.writeDoubleLE = /* @__PURE__ */ __name(function writeDoubleLE(value, offset, noAssert) {
-      return writeDouble(this, value, offset, true, noAssert);
-    }, "writeDoubleLE");
-    Buffer2.prototype.writeDoubleBE = /* @__PURE__ */ __name(function writeDoubleBE(value, offset, noAssert) {
-      return writeDouble(this, value, offset, false, noAssert);
-    }, "writeDoubleBE");
-    Buffer2.prototype.copy = /* @__PURE__ */ __name(function copy(target, targetStart, start, end) {
-      if (!start)
-        start = 0;
-      if (!end && end !== 0)
-        end = this.length;
-      if (targetStart >= target.length)
-        targetStart = target.length;
-      if (!targetStart)
-        targetStart = 0;
-      if (end > 0 && end < start)
-        end = start;
-      if (end === start)
-        return 0;
-      if (target.length === 0 || this.length === 0)
-        return 0;
-      if (targetStart < 0) {
-        throw new RangeError("targetStart out of bounds");
-      }
-      if (start < 0 || start >= this.length)
-        throw new RangeError("sourceStart out of bounds");
-      if (end < 0)
-        throw new RangeError("sourceEnd out of bounds");
-      if (end > this.length)
-        end = this.length;
-      if (target.length - targetStart < end - start) {
-        end = target.length - targetStart + start;
-      }
-      var len = end - start;
-      var i;
-      if (this === target && start < targetStart && targetStart < end) {
-        for (i = len - 1; i >= 0; --i) {
-          target[i + targetStart] = this[i + start];
-        }
-      } else if (len < 1e3 || !Buffer2.TYPED_ARRAY_SUPPORT) {
-        for (i = 0; i < len; ++i) {
-          target[i + targetStart] = this[i + start];
-        }
-      } else {
-        Uint8Array.prototype.set.call(
-          target,
-          this.subarray(start, start + len),
-          targetStart
-        );
-      }
-      return len;
-    }, "copy");
-    Buffer2.prototype.fill = /* @__PURE__ */ __name(function fill(val, start, end, encoding) {
-      if (typeof val === "string") {
-        if (typeof start === "string") {
-          encoding = start;
-          start = 0;
-          end = this.length;
-        } else if (typeof end === "string") {
-          encoding = end;
-          end = this.length;
-        }
-        if (val.length === 1) {
-          var code = val.charCodeAt(0);
-          if (code < 256) {
-            val = code;
-          }
-        }
-        if (encoding !== void 0 && typeof encoding !== "string") {
-          throw new TypeError("encoding must be a string");
-        }
-        if (typeof encoding === "string" && !Buffer2.isEncoding(encoding)) {
-          throw new TypeError("Unknown encoding: " + encoding);
-        }
-      } else if (typeof val === "number") {
-        val = val & 255;
-      }
-      if (start < 0 || this.length < start || this.length < end) {
-        throw new RangeError("Out of range index");
-      }
-      if (end <= start) {
-        return this;
-      }
-      start = start >>> 0;
-      end = end === void 0 ? this.length : end >>> 0;
-      if (!val)
-        val = 0;
-      var i;
-      if (typeof val === "number") {
-        for (i = start; i < end; ++i) {
-          this[i] = val;
-        }
-      } else {
-        var bytes = internalIsBuffer(val) ? val : utf8ToBytes(new Buffer2(val, encoding).toString());
-        var len = bytes.length;
-        for (i = 0; i < end - start; ++i) {
-          this[i + start] = bytes[i % len];
-        }
-      }
-      return this;
-    }, "fill");
-    INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g;
-    __name(base64clean, "base64clean");
-    __name(stringtrim, "stringtrim");
-    __name(toHex, "toHex");
-    __name(utf8ToBytes, "utf8ToBytes");
-    __name(asciiToBytes, "asciiToBytes");
-    __name(utf16leToBytes, "utf16leToBytes");
-    __name(base64ToBytes, "base64ToBytes");
-    __name(blitBuffer, "blitBuffer");
-    __name(isnan, "isnan");
-    __name(isBuffer, "isBuffer");
-    __name(isFastBuffer, "isFastBuffer");
-    __name(isSlowBuffer, "isSlowBuffer");
-    __name(ieee754read, "ieee754read");
-    __name(ieee754write, "ieee754write");
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    __name(createNotImplementedError, "createNotImplementedError");
+    __name(notImplemented, "notImplemented");
+    __name(notImplementedClass, "notImplementedClass");
   }
 });
 
-// node_modules/@esbuild-plugins/node-globals-polyfill/_buffer.js
-var init_buffer = __esm({
-  "node_modules/@esbuild-plugins/node-globals-polyfill/_buffer.js"() {
-    init_Buffer();
+// node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs
+var _timeOrigin, _performanceNow, nodeTiming, PerformanceEntry, PerformanceMark, PerformanceMeasure, PerformanceResourceTiming, PerformanceObserverEntryList, Performance, PerformanceObserver, performance;
+var init_performance = __esm({
+  "node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_utils();
+    _timeOrigin = globalThis.performance?.timeOrigin ?? Date.now();
+    _performanceNow = globalThis.performance?.now ? globalThis.performance.now.bind(globalThis.performance) : () => Date.now() - _timeOrigin;
+    nodeTiming = {
+      name: "node",
+      entryType: "node",
+      startTime: 0,
+      duration: 0,
+      nodeStart: 0,
+      v8Start: 0,
+      bootstrapComplete: 0,
+      environment: 0,
+      loopStart: 0,
+      loopExit: 0,
+      idleTime: 0,
+      uvMetricsInfo: {
+        loopCount: 0,
+        events: 0,
+        eventsWaiting: 0
+      },
+      detail: void 0,
+      toJSON() {
+        return this;
+      }
+    };
+    PerformanceEntry = class {
+      __unenv__ = true;
+      detail;
+      entryType = "event";
+      name;
+      startTime;
+      constructor(name, options) {
+        this.name = name;
+        this.startTime = options?.startTime || _performanceNow();
+        this.detail = options?.detail;
+      }
+      get duration() {
+        return _performanceNow() - this.startTime;
+      }
+      toJSON() {
+        return {
+          name: this.name,
+          entryType: this.entryType,
+          startTime: this.startTime,
+          duration: this.duration,
+          detail: this.detail
+        };
+      }
+    };
+    __name(PerformanceEntry, "PerformanceEntry");
+    PerformanceMark = /* @__PURE__ */ __name(class PerformanceMark2 extends PerformanceEntry {
+      entryType = "mark";
+      constructor() {
+        super(...arguments);
+      }
+      get duration() {
+        return 0;
+      }
+    }, "PerformanceMark");
+    PerformanceMeasure = class extends PerformanceEntry {
+      entryType = "measure";
+    };
+    __name(PerformanceMeasure, "PerformanceMeasure");
+    PerformanceResourceTiming = class extends PerformanceEntry {
+      entryType = "resource";
+      serverTiming = [];
+      connectEnd = 0;
+      connectStart = 0;
+      decodedBodySize = 0;
+      domainLookupEnd = 0;
+      domainLookupStart = 0;
+      encodedBodySize = 0;
+      fetchStart = 0;
+      initiatorType = "";
+      name = "";
+      nextHopProtocol = "";
+      redirectEnd = 0;
+      redirectStart = 0;
+      requestStart = 0;
+      responseEnd = 0;
+      responseStart = 0;
+      secureConnectionStart = 0;
+      startTime = 0;
+      transferSize = 0;
+      workerStart = 0;
+      responseStatus = 0;
+    };
+    __name(PerformanceResourceTiming, "PerformanceResourceTiming");
+    PerformanceObserverEntryList = class {
+      __unenv__ = true;
+      getEntries() {
+        return [];
+      }
+      getEntriesByName(_name, _type) {
+        return [];
+      }
+      getEntriesByType(type) {
+        return [];
+      }
+    };
+    __name(PerformanceObserverEntryList, "PerformanceObserverEntryList");
+    Performance = class {
+      __unenv__ = true;
+      timeOrigin = _timeOrigin;
+      eventCounts = /* @__PURE__ */ new Map();
+      _entries = [];
+      _resourceTimingBufferSize = 0;
+      navigation = void 0;
+      timing = void 0;
+      timerify(_fn, _options) {
+        throw createNotImplementedError("Performance.timerify");
+      }
+      get nodeTiming() {
+        return nodeTiming;
+      }
+      eventLoopUtilization() {
+        return {};
+      }
+      markResourceTiming() {
+        return new PerformanceResourceTiming("");
+      }
+      onresourcetimingbufferfull = null;
+      now() {
+        if (this.timeOrigin === _timeOrigin) {
+          return _performanceNow();
+        }
+        return Date.now() - this.timeOrigin;
+      }
+      clearMarks(markName) {
+        this._entries = markName ? this._entries.filter((e) => e.name !== markName) : this._entries.filter((e) => e.entryType !== "mark");
+      }
+      clearMeasures(measureName) {
+        this._entries = measureName ? this._entries.filter((e) => e.name !== measureName) : this._entries.filter((e) => e.entryType !== "measure");
+      }
+      clearResourceTimings() {
+        this._entries = this._entries.filter((e) => e.entryType !== "resource" || e.entryType !== "navigation");
+      }
+      getEntries() {
+        return this._entries;
+      }
+      getEntriesByName(name, type) {
+        return this._entries.filter((e) => e.name === name && (!type || e.entryType === type));
+      }
+      getEntriesByType(type) {
+        return this._entries.filter((e) => e.entryType === type);
+      }
+      mark(name, options) {
+        const entry = new PerformanceMark(name, options);
+        this._entries.push(entry);
+        return entry;
+      }
+      measure(measureName, startOrMeasureOptions, endMark) {
+        let start;
+        let end;
+        if (typeof startOrMeasureOptions === "string") {
+          start = this.getEntriesByName(startOrMeasureOptions, "mark")[0]?.startTime;
+          end = this.getEntriesByName(endMark, "mark")[0]?.startTime;
+        } else {
+          start = Number.parseFloat(startOrMeasureOptions?.start) || this.now();
+          end = Number.parseFloat(startOrMeasureOptions?.end) || this.now();
+        }
+        const entry = new PerformanceMeasure(measureName, {
+          startTime: start,
+          detail: {
+            start,
+            end
+          }
+        });
+        this._entries.push(entry);
+        return entry;
+      }
+      setResourceTimingBufferSize(maxSize) {
+        this._resourceTimingBufferSize = maxSize;
+      }
+      addEventListener(type, listener, options) {
+        throw createNotImplementedError("Performance.addEventListener");
+      }
+      removeEventListener(type, listener, options) {
+        throw createNotImplementedError("Performance.removeEventListener");
+      }
+      dispatchEvent(event) {
+        throw createNotImplementedError("Performance.dispatchEvent");
+      }
+      toJSON() {
+        return this;
+      }
+    };
+    __name(Performance, "Performance");
+    PerformanceObserver = class {
+      __unenv__ = true;
+      _callback = null;
+      constructor(callback) {
+        this._callback = callback;
+      }
+      takeRecords() {
+        return [];
+      }
+      disconnect() {
+        throw createNotImplementedError("PerformanceObserver.disconnect");
+      }
+      observe(options) {
+        throw createNotImplementedError("PerformanceObserver.observe");
+      }
+      bind(fn) {
+        return fn;
+      }
+      runInAsyncScope(fn, thisArg, ...args) {
+        return fn.call(thisArg, ...args);
+      }
+      asyncId() {
+        return 0;
+      }
+      triggerAsyncId() {
+        return 0;
+      }
+      emitDestroy() {
+        return this;
+      }
+    };
+    __name(PerformanceObserver, "PerformanceObserver");
+    __publicField(PerformanceObserver, "supportedEntryTypes", []);
+    performance = globalThis.performance && "addEventListener" in globalThis.performance ? globalThis.performance : new Performance();
+  }
+});
+
+// node_modules/unenv/dist/runtime/node/perf_hooks.mjs
+var init_perf_hooks = __esm({
+  "node_modules/unenv/dist/runtime/node/perf_hooks.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_performance();
+  }
+});
+
+// node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs
+var init_performance2 = __esm({
+  "node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs"() {
+    init_perf_hooks();
+    globalThis.performance = performance;
+    globalThis.Performance = Performance;
+    globalThis.PerformanceEntry = PerformanceEntry;
+    globalThis.PerformanceMark = PerformanceMark;
+    globalThis.PerformanceMeasure = PerformanceMeasure;
+    globalThis.PerformanceObserver = PerformanceObserver;
+    globalThis.PerformanceObserverEntryList = PerformanceObserverEntryList;
+    globalThis.PerformanceResourceTiming = PerformanceResourceTiming;
+  }
+});
+
+// node_modules/unenv/dist/runtime/mock/noop.mjs
+var noop_default;
+var init_noop = __esm({
+  "node_modules/unenv/dist/runtime/mock/noop.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    noop_default = Object.assign(() => {
+    }, { __unenv__: true });
+  }
+});
+
+// node_modules/unenv/dist/runtime/node/console.mjs
+import { Writable } from "node:stream";
+var _console, _ignoreErrors, _stderr, _stdout, log, info, trace, debug, table, error, warn, createTask, clear, count, countReset, dir, dirxml, group, groupEnd, groupCollapsed, profile, profileEnd, time, timeEnd, timeLog, timeStamp, Console, _times, _stdoutErrorHandler, _stderrErrorHandler;
+var init_console = __esm({
+  "node_modules/unenv/dist/runtime/node/console.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_noop();
+    init_utils();
+    _console = globalThis.console;
+    _ignoreErrors = true;
+    _stderr = new Writable();
+    _stdout = new Writable();
+    log = _console?.log ?? noop_default;
+    info = _console?.info ?? log;
+    trace = _console?.trace ?? info;
+    debug = _console?.debug ?? log;
+    table = _console?.table ?? log;
+    error = _console?.error ?? log;
+    warn = _console?.warn ?? error;
+    createTask = _console?.createTask ?? /* @__PURE__ */ notImplemented("console.createTask");
+    clear = _console?.clear ?? noop_default;
+    count = _console?.count ?? noop_default;
+    countReset = _console?.countReset ?? noop_default;
+    dir = _console?.dir ?? noop_default;
+    dirxml = _console?.dirxml ?? noop_default;
+    group = _console?.group ?? noop_default;
+    groupEnd = _console?.groupEnd ?? noop_default;
+    groupCollapsed = _console?.groupCollapsed ?? noop_default;
+    profile = _console?.profile ?? noop_default;
+    profileEnd = _console?.profileEnd ?? noop_default;
+    time = _console?.time ?? noop_default;
+    timeEnd = _console?.timeEnd ?? noop_default;
+    timeLog = _console?.timeLog ?? noop_default;
+    timeStamp = _console?.timeStamp ?? noop_default;
+    Console = _console?.Console ?? /* @__PURE__ */ notImplementedClass("console.Console");
+    _times = /* @__PURE__ */ new Map();
+    _stdoutErrorHandler = noop_default;
+    _stderrErrorHandler = noop_default;
+  }
+});
+
+// node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs
+var workerdConsole, assert, clear2, context, count2, countReset2, createTask2, debug2, dir2, dirxml2, error2, group2, groupCollapsed2, groupEnd2, info2, log2, profile2, profileEnd2, table2, time2, timeEnd2, timeLog2, timeStamp2, trace2, warn2, console_default;
+var init_console2 = __esm({
+  "node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_console();
+    workerdConsole = globalThis["console"];
+    ({
+      assert,
+      clear: clear2,
+      context: (
+        // @ts-expect-error undocumented public API
+        context
+      ),
+      count: count2,
+      countReset: countReset2,
+      createTask: (
+        // @ts-expect-error undocumented public API
+        createTask2
+      ),
+      debug: debug2,
+      dir: dir2,
+      dirxml: dirxml2,
+      error: error2,
+      group: group2,
+      groupCollapsed: groupCollapsed2,
+      groupEnd: groupEnd2,
+      info: info2,
+      log: log2,
+      profile: profile2,
+      profileEnd: profileEnd2,
+      table: table2,
+      time: time2,
+      timeEnd: timeEnd2,
+      timeLog: timeLog2,
+      timeStamp: timeStamp2,
+      trace: trace2,
+      warn: warn2
+    } = workerdConsole);
+    Object.assign(workerdConsole, {
+      Console,
+      _ignoreErrors,
+      _stderr,
+      _stderrErrorHandler,
+      _stdout,
+      _stdoutErrorHandler,
+      _times
+    });
+    console_default = workerdConsole;
+  }
+});
+
+// node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console
+var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console = __esm({
+  "node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console"() {
+    init_console2();
+    globalThis.console = console_default;
+  }
+});
+
+// node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs
+var hrtime;
+var init_hrtime = __esm({
+  "node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    hrtime = /* @__PURE__ */ Object.assign(/* @__PURE__ */ __name(function hrtime2(startTime) {
+      const now = Date.now();
+      const seconds = Math.trunc(now / 1e3);
+      const nanos = now % 1e3 * 1e6;
+      if (startTime) {
+        let diffSeconds = seconds - startTime[0];
+        let diffNanos = nanos - startTime[0];
+        if (diffNanos < 0) {
+          diffSeconds = diffSeconds - 1;
+          diffNanos = 1e9 + diffNanos;
+        }
+        return [diffSeconds, diffNanos];
+      }
+      return [seconds, nanos];
+    }, "hrtime"), { bigint: /* @__PURE__ */ __name(function bigint() {
+      return BigInt(Date.now() * 1e6);
+    }, "bigint") });
+  }
+});
+
+// node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs
+import { Socket } from "node:net";
+var ReadStream;
+var init_read_stream = __esm({
+  "node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    ReadStream = class extends Socket {
+      fd;
+      constructor(fd) {
+        super();
+        this.fd = fd;
+      }
+      isRaw = false;
+      setRawMode(mode) {
+        this.isRaw = mode;
+        return this;
+      }
+      isTTY = false;
+    };
+    __name(ReadStream, "ReadStream");
+  }
+});
+
+// node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs
+import { Socket as Socket2 } from "node:net";
+var WriteStream;
+var init_write_stream = __esm({
+  "node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    WriteStream = class extends Socket2 {
+      fd;
+      constructor(fd) {
+        super();
+        this.fd = fd;
+      }
+      clearLine(dir3, callback) {
+        callback && callback();
+        return false;
+      }
+      clearScreenDown(callback) {
+        callback && callback();
+        return false;
+      }
+      cursorTo(x, y, callback) {
+        callback && typeof callback === "function" && callback();
+        return false;
+      }
+      moveCursor(dx, dy, callback) {
+        callback && callback();
+        return false;
+      }
+      getColorDepth(env2) {
+        return 1;
+      }
+      hasColors(count3, env2) {
+        return false;
+      }
+      getWindowSize() {
+        return [this.columns, this.rows];
+      }
+      columns = 80;
+      rows = 24;
+      isTTY = false;
+    };
+    __name(WriteStream, "WriteStream");
+  }
+});
+
+// node_modules/unenv/dist/runtime/node/tty.mjs
+var init_tty = __esm({
+  "node_modules/unenv/dist/runtime/node/tty.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_read_stream();
+    init_write_stream();
+  }
+});
+
+// node_modules/unenv/dist/runtime/node/internal/process/process.mjs
+import { EventEmitter } from "node:events";
+var Process;
+var init_process = __esm({
+  "node_modules/unenv/dist/runtime/node/internal/process/process.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_tty();
+    init_utils();
+    Process = class extends EventEmitter {
+      env;
+      hrtime;
+      nextTick;
+      constructor(impl) {
+        super();
+        this.env = impl.env;
+        this.hrtime = impl.hrtime;
+        this.nextTick = impl.nextTick;
+        for (const prop of [...Object.getOwnPropertyNames(Process.prototype), ...Object.getOwnPropertyNames(EventEmitter.prototype)]) {
+          const value = this[prop];
+          if (typeof value === "function") {
+            this[prop] = value.bind(this);
+          }
+        }
+      }
+      emitWarning(warning, type, code) {
+        console.warn(`${code ? `[${code}] ` : ""}${type ? `${type}: ` : ""}${warning}`);
+      }
+      emit(...args) {
+        return super.emit(...args);
+      }
+      listeners(eventName) {
+        return super.listeners(eventName);
+      }
+      #stdin;
+      #stdout;
+      #stderr;
+      get stdin() {
+        return this.#stdin ??= new ReadStream(0);
+      }
+      get stdout() {
+        return this.#stdout ??= new WriteStream(1);
+      }
+      get stderr() {
+        return this.#stderr ??= new WriteStream(2);
+      }
+      #cwd = "/";
+      chdir(cwd2) {
+        this.#cwd = cwd2;
+      }
+      cwd() {
+        return this.#cwd;
+      }
+      arch = "";
+      platform = "";
+      argv = [];
+      argv0 = "";
+      execArgv = [];
+      execPath = "";
+      title = "";
+      pid = 200;
+      ppid = 100;
+      get version() {
+        return "";
+      }
+      get versions() {
+        return {};
+      }
+      get allowedNodeEnvironmentFlags() {
+        return /* @__PURE__ */ new Set();
+      }
+      get sourceMapsEnabled() {
+        return false;
+      }
+      get debugPort() {
+        return 0;
+      }
+      get throwDeprecation() {
+        return false;
+      }
+      get traceDeprecation() {
+        return false;
+      }
+      get features() {
+        return {};
+      }
+      get release() {
+        return {};
+      }
+      get connected() {
+        return false;
+      }
+      get config() {
+        return {};
+      }
+      get moduleLoadList() {
+        return [];
+      }
+      constrainedMemory() {
+        return 0;
+      }
+      availableMemory() {
+        return 0;
+      }
+      uptime() {
+        return 0;
+      }
+      resourceUsage() {
+        return {};
+      }
+      ref() {
+      }
+      unref() {
+      }
+      umask() {
+        throw createNotImplementedError("process.umask");
+      }
+      getBuiltinModule() {
+        return void 0;
+      }
+      getActiveResourcesInfo() {
+        throw createNotImplementedError("process.getActiveResourcesInfo");
+      }
+      exit() {
+        throw createNotImplementedError("process.exit");
+      }
+      reallyExit() {
+        throw createNotImplementedError("process.reallyExit");
+      }
+      kill() {
+        throw createNotImplementedError("process.kill");
+      }
+      abort() {
+        throw createNotImplementedError("process.abort");
+      }
+      dlopen() {
+        throw createNotImplementedError("process.dlopen");
+      }
+      setSourceMapsEnabled() {
+        throw createNotImplementedError("process.setSourceMapsEnabled");
+      }
+      loadEnvFile() {
+        throw createNotImplementedError("process.loadEnvFile");
+      }
+      disconnect() {
+        throw createNotImplementedError("process.disconnect");
+      }
+      cpuUsage() {
+        throw createNotImplementedError("process.cpuUsage");
+      }
+      setUncaughtExceptionCaptureCallback() {
+        throw createNotImplementedError("process.setUncaughtExceptionCaptureCallback");
+      }
+      hasUncaughtExceptionCaptureCallback() {
+        throw createNotImplementedError("process.hasUncaughtExceptionCaptureCallback");
+      }
+      initgroups() {
+        throw createNotImplementedError("process.initgroups");
+      }
+      openStdin() {
+        throw createNotImplementedError("process.openStdin");
+      }
+      assert() {
+        throw createNotImplementedError("process.assert");
+      }
+      binding() {
+        throw createNotImplementedError("process.binding");
+      }
+      permission = { has: /* @__PURE__ */ notImplemented("process.permission.has") };
+      report = {
+        directory: "",
+        filename: "",
+        signal: "SIGUSR2",
+        compact: false,
+        reportOnFatalError: false,
+        reportOnSignal: false,
+        reportOnUncaughtException: false,
+        getReport: /* @__PURE__ */ notImplemented("process.report.getReport"),
+        writeReport: /* @__PURE__ */ notImplemented("process.report.writeReport")
+      };
+      finalization = {
+        register: /* @__PURE__ */ notImplemented("process.finalization.register"),
+        unregister: /* @__PURE__ */ notImplemented("process.finalization.unregister"),
+        registerBeforeExit: /* @__PURE__ */ notImplemented("process.finalization.registerBeforeExit")
+      };
+      memoryUsage = Object.assign(() => ({
+        arrayBuffers: 0,
+        rss: 0,
+        external: 0,
+        heapTotal: 0,
+        heapUsed: 0
+      }), { rss: () => 0 });
+      mainModule = void 0;
+      domain = void 0;
+      send = void 0;
+      exitCode = void 0;
+      channel = void 0;
+      getegid = void 0;
+      geteuid = void 0;
+      getgid = void 0;
+      getgroups = void 0;
+      getuid = void 0;
+      setegid = void 0;
+      seteuid = void 0;
+      setgid = void 0;
+      setgroups = void 0;
+      setuid = void 0;
+      _events = void 0;
+      _eventsCount = void 0;
+      _exiting = void 0;
+      _maxListeners = void 0;
+      _debugEnd = void 0;
+      _debugProcess = void 0;
+      _fatalException = void 0;
+      _getActiveHandles = void 0;
+      _getActiveRequests = void 0;
+      _kill = void 0;
+      _preload_modules = void 0;
+      _rawDebug = void 0;
+      _startProfilerIdleNotifier = void 0;
+      _stopProfilerIdleNotifier = void 0;
+      _tickCallback = void 0;
+      _disconnect = void 0;
+      _handleQueue = void 0;
+      _pendingMessage = void 0;
+      _channel = void 0;
+      _send = void 0;
+      _linkedBinding = void 0;
+    };
+    __name(Process, "Process");
+  }
+});
+
+// node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs
+var globalProcess, getBuiltinModule, exit, platform, nextTick, unenvProcess, abort, addListener, allowedNodeEnvironmentFlags, hasUncaughtExceptionCaptureCallback, setUncaughtExceptionCaptureCallback, loadEnvFile, sourceMapsEnabled, arch, argv, argv0, chdir, config, connected, constrainedMemory, availableMemory, cpuUsage, cwd, debugPort, dlopen, disconnect, emit, emitWarning, env, eventNames, execArgv, execPath, finalization, features, getActiveResourcesInfo, getMaxListeners, hrtime3, kill, listeners, listenerCount, memoryUsage, on, off, once, pid, ppid, prependListener, prependOnceListener, rawListeners, release, removeAllListeners, removeListener, report, resourceUsage, setMaxListeners, setSourceMapsEnabled, stderr, stdin, stdout, title, throwDeprecation, traceDeprecation, umask, uptime, version, versions, domain, initgroups, moduleLoadList, reallyExit, openStdin, assert2, binding, send, exitCode, channel, getegid, geteuid, getgid, getgroups, getuid, setegid, seteuid, setgid, setgroups, setuid, permission, mainModule, _events, _eventsCount, _exiting, _maxListeners, _debugEnd, _debugProcess, _fatalException, _getActiveHandles, _getActiveRequests, _kill, _preload_modules, _rawDebug, _startProfilerIdleNotifier, _stopProfilerIdleNotifier, _tickCallback, _disconnect, _handleQueue, _pendingMessage, _channel, _send, _linkedBinding, _process, process_default;
+var init_process2 = __esm({
+  "node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs"() {
+    init_strip_cf_connecting_ip_header();
+    init_modules_watch_stub();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
+    init_hrtime();
+    init_process();
+    globalProcess = globalThis["process"];
+    getBuiltinModule = globalProcess.getBuiltinModule;
+    ({ exit, platform, nextTick } = getBuiltinModule(
+      "node:process"
+    ));
+    unenvProcess = new Process({
+      env: globalProcess.env,
+      hrtime,
+      nextTick
+    });
+    ({
+      abort,
+      addListener,
+      allowedNodeEnvironmentFlags,
+      hasUncaughtExceptionCaptureCallback,
+      setUncaughtExceptionCaptureCallback,
+      loadEnvFile,
+      sourceMapsEnabled,
+      arch,
+      argv,
+      argv0,
+      chdir,
+      config,
+      connected,
+      constrainedMemory,
+      availableMemory,
+      cpuUsage,
+      cwd,
+      debugPort,
+      dlopen,
+      disconnect,
+      emit,
+      emitWarning,
+      env,
+      eventNames,
+      execArgv,
+      execPath,
+      finalization,
+      features,
+      getActiveResourcesInfo,
+      getMaxListeners,
+      hrtime: hrtime3,
+      kill,
+      listeners,
+      listenerCount,
+      memoryUsage,
+      on,
+      off,
+      once,
+      pid,
+      ppid,
+      prependListener,
+      prependOnceListener,
+      rawListeners,
+      release,
+      removeAllListeners,
+      removeListener,
+      report,
+      resourceUsage,
+      setMaxListeners,
+      setSourceMapsEnabled,
+      stderr,
+      stdin,
+      stdout,
+      title,
+      throwDeprecation,
+      traceDeprecation,
+      umask,
+      uptime,
+      version,
+      versions,
+      domain,
+      initgroups,
+      moduleLoadList,
+      reallyExit,
+      openStdin,
+      assert: assert2,
+      binding,
+      send,
+      exitCode,
+      channel,
+      getegid,
+      geteuid,
+      getgid,
+      getgroups,
+      getuid,
+      setegid,
+      seteuid,
+      setgid,
+      setgroups,
+      setuid,
+      permission,
+      mainModule,
+      _events,
+      _eventsCount,
+      _exiting,
+      _maxListeners,
+      _debugEnd,
+      _debugProcess,
+      _fatalException,
+      _getActiveHandles,
+      _getActiveRequests,
+      _kill,
+      _preload_modules,
+      _rawDebug,
+      _startProfilerIdleNotifier,
+      _stopProfilerIdleNotifier,
+      _tickCallback,
+      _disconnect,
+      _handleQueue,
+      _pendingMessage,
+      _channel,
+      _send,
+      _linkedBinding
+    } = unenvProcess);
+    _process = {
+      abort,
+      addListener,
+      allowedNodeEnvironmentFlags,
+      hasUncaughtExceptionCaptureCallback,
+      setUncaughtExceptionCaptureCallback,
+      loadEnvFile,
+      sourceMapsEnabled,
+      arch,
+      argv,
+      argv0,
+      chdir,
+      config,
+      connected,
+      constrainedMemory,
+      availableMemory,
+      cpuUsage,
+      cwd,
+      debugPort,
+      dlopen,
+      disconnect,
+      emit,
+      emitWarning,
+      env,
+      eventNames,
+      execArgv,
+      execPath,
+      exit,
+      finalization,
+      features,
+      getBuiltinModule,
+      getActiveResourcesInfo,
+      getMaxListeners,
+      hrtime: hrtime3,
+      kill,
+      listeners,
+      listenerCount,
+      memoryUsage,
+      nextTick,
+      on,
+      off,
+      once,
+      pid,
+      platform,
+      ppid,
+      prependListener,
+      prependOnceListener,
+      rawListeners,
+      release,
+      removeAllListeners,
+      removeListener,
+      report,
+      resourceUsage,
+      setMaxListeners,
+      setSourceMapsEnabled,
+      stderr,
+      stdin,
+      stdout,
+      title,
+      throwDeprecation,
+      traceDeprecation,
+      umask,
+      uptime,
+      version,
+      versions,
+      // @ts-expect-error old API
+      domain,
+      initgroups,
+      moduleLoadList,
+      reallyExit,
+      openStdin,
+      assert: assert2,
+      binding,
+      send,
+      exitCode,
+      channel,
+      getegid,
+      geteuid,
+      getgid,
+      getgroups,
+      getuid,
+      setegid,
+      seteuid,
+      setgid,
+      setgroups,
+      setuid,
+      permission,
+      mainModule,
+      _events,
+      _eventsCount,
+      _exiting,
+      _maxListeners,
+      _debugEnd,
+      _debugProcess,
+      _fatalException,
+      _getActiveHandles,
+      _getActiveRequests,
+      _kill,
+      _preload_modules,
+      _rawDebug,
+      _startProfilerIdleNotifier,
+      _stopProfilerIdleNotifier,
+      _tickCallback,
+      _disconnect,
+      _handleQueue,
+      _pendingMessage,
+      _channel,
+      _send,
+      _linkedBinding
+    };
+    process_default = _process;
+  }
+});
+
+// node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process
+var init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process = __esm({
+  "node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process"() {
+    init_process2();
+    globalThis.process = process_default;
   }
 });
 
@@ -1963,8 +1055,9 @@ var init_wrangler_modules_watch = __esm({
   "wrangler-modules-watch:wrangler:modules-watch"() {
     init_strip_cf_connecting_ip_header();
     init_modules_watch_stub();
-    init_process();
-    init_buffer();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
   }
 });
 
@@ -2088,12 +1181,12 @@ function Base64_decode(input) {
 }
 function new_raw_buf(len) {
   if (has_buf)
-    return Buffer2.alloc ? Buffer2.alloc(len) : new Buffer2(len);
+    return Buffer.alloc ? Buffer.alloc(len) : new Buffer(len);
   return typeof Uint8Array != "undefined" ? new Uint8Array(len) : new Array(len);
 }
 function new_unsafe_buf(len) {
   if (has_buf)
-    return Buffer2.allocUnsafe ? Buffer2.allocUnsafe(len) : new Buffer2(len);
+    return Buffer.allocUnsafe ? Buffer.allocUnsafe(len) : new Buffer(len);
   return typeof Uint8Array != "undefined" ? new Uint8Array(len) : new Array(len);
 }
 function s2ab(s) {
@@ -2169,23 +1262,23 @@ function _strrev(x) {
 }
 function pad0(v, d) {
   var t = "" + v;
-  return t.length >= d ? t : fill2("0", d - t.length) + t;
+  return t.length >= d ? t : fill("0", d - t.length) + t;
 }
 function pad_(v, d) {
   var t = "" + v;
-  return t.length >= d ? t : fill2(" ", d - t.length) + t;
+  return t.length >= d ? t : fill(" ", d - t.length) + t;
 }
 function rpad_(v, d) {
   var t = "" + v;
-  return t.length >= d ? t : t + fill2(" ", d - t.length);
+  return t.length >= d ? t : t + fill(" ", d - t.length);
 }
 function pad0r1(v, d) {
   var t = "" + Math.round(v);
-  return t.length >= d ? t : fill2("0", d - t.length) + t;
+  return t.length >= d ? t : fill("0", d - t.length) + t;
 }
 function pad0r2(v, d) {
   var t = "" + v;
-  return t.length >= d ? t : fill2("0", d - t.length) + t;
+  return t.length >= d ? t : fill("0", d - t.length) + t;
 }
 function pad0r(v, d) {
   if (v > p2_32 || v < -p2_32)
@@ -2266,17 +1359,17 @@ function SSF_frac(x, D, mixed) {
 function SSF_parse_date_code(v, opts, b2) {
   if (v > 2958465 || v < 0)
     return null;
-  var date = v | 0, time = Math.floor(86400 * (v - date)), dow = 0;
+  var date = v | 0, time3 = Math.floor(86400 * (v - date)), dow = 0;
   var dout = [];
-  var out = { D: date, T: time, u: 86400 * (v - date) - time, y: 0, m: 0, d: 0, H: 0, M: 0, S: 0, q: 0 };
+  var out = { D: date, T: time3, u: 86400 * (v - date) - time3, y: 0, m: 0, d: 0, H: 0, M: 0, S: 0, q: 0 };
   if (Math.abs(out.u) < 1e-6)
     out.u = 0;
   if (opts && opts.date1904)
     date += 1462;
   if (out.u > 0.9999) {
     out.u = 0;
-    if (++time == 86400) {
-      out.T = time = 0;
+    if (++time3 == 86400) {
+      out.T = time3 = 0;
       ++date;
       ++out.D;
     }
@@ -2302,11 +1395,11 @@ function SSF_parse_date_code(v, opts, b2) {
   out.y = dout[0];
   out.m = dout[1];
   out.d = dout[2];
-  out.S = time % 60;
-  time = Math.floor(time / 60);
-  out.M = time % 60;
-  time = Math.floor(time / 60);
-  out.H = time;
+  out.S = time3 % 60;
+  time3 = Math.floor(time3 / 60);
+  out.M = time3 % 60;
+  time3 = Math.floor(time3 / 60);
+  out.H = time3;
   out.q = dow;
   return out;
 }
@@ -2512,7 +1605,7 @@ function commaify(s) {
 }
 function write_num_pct(type, fmt, val) {
   var sfmt = fmt.replace(pct1, ""), mul = fmt.length - sfmt.length;
-  return write_num(type, sfmt, val * Math.pow(10, 2 * mul)) + fill2("%", mul);
+  return write_num(type, sfmt, val * Math.pow(10, 2 * mul)) + fill("%", mul);
 }
 function write_num_cm(type, fmt, val) {
   var idx = fmt.length - 1;
@@ -2561,10 +1654,10 @@ function write_num_exp(fmt, val) {
 function write_num_f1(r, aval, sign) {
   var den = parseInt(r[4], 10), rr = Math.round(aval * den), base = Math.floor(rr / den);
   var myn = rr - base * den, myd = den;
-  return sign + (base === 0 ? "" : "" + base) + " " + (myn === 0 ? fill2(" ", r[1].length + 1 + r[4].length) : pad_(myn, r[1].length) + r[2] + "/" + r[3] + pad0(myd, r[4].length));
+  return sign + (base === 0 ? "" : "" + base) + " " + (myn === 0 ? fill(" ", r[1].length + 1 + r[4].length) : pad_(myn, r[1].length) + r[2] + "/" + r[3] + pad0(myd, r[4].length));
 }
 function write_num_f2(r, aval, sign) {
-  return sign + (aval === 0 ? "" : "" + aval) + fill2(" ", r[1].length + 2 + r[4].length);
+  return sign + (aval === 0 ? "" : "" + aval) + fill(" ", r[1].length + 2 + r[4].length);
 }
 function hashq(str) {
   var o = "", cc;
@@ -2635,7 +1728,7 @@ function write_num_flt(type, fmt, val) {
     return sign + pad0r(aval, fmt.length - fmt.indexOf("0"));
   if (r = fmt.match(dec1)) {
     o = rnd(val, r[1].length).replace(/^([^\.]+)$/, "$1." + hashq(r[1])).replace(/\.$/, "." + hashq(r[1])).replace(/\.(\d*)$/, function($$, $1) {
-      return "." + $1 + fill2("0", hashq(
+      return "." + $1 + fill("0", hashq(
         /*::(*/
         r[1]
       ).length - $1.length);
@@ -2693,7 +1786,7 @@ function write_num_flt(type, fmt, val) {
   if (r = fmt.match(/^# ([#0?]+)( ?)\/( ?)([#0?]+)/)) {
     ri = Math.min(Math.max(r[1].length, r[4].length), 7);
     ff = SSF_frac(aval, Math.pow(10, ri) - 1, true);
-    return sign + (ff[0] || (ff[1] ? "" : "0")) + " " + (ff[1] ? pad_(ff[1], ri) + r[2] + "/" + r[3] + rpad_(ff[2], ri) : fill2(" ", 2 * ri + 1 + r[2].length + r[3].length));
+    return sign + (ff[0] || (ff[1] ? "" : "0")) + " " + (ff[1] ? pad_(ff[1], ri) + r[2] + "/" + r[3] + rpad_(ff[2], ri) : fill(" ", 2 * ri + 1 + r[2].length + r[3].length));
   }
   if (r = fmt.match(/^[#0?]+$/)) {
     o = pad0r(val, 0);
@@ -2737,7 +1830,7 @@ function write_num_cm2(type, fmt, val) {
 }
 function write_num_pct2(type, fmt, val) {
   var sfmt = fmt.replace(pct1, ""), mul = fmt.length - sfmt.length;
-  return write_num(type, sfmt, val * Math.pow(10, 2 * mul)) + fill2("%", mul);
+  return write_num(type, sfmt, val * Math.pow(10, 2 * mul)) + fill("%", mul);
 }
 function write_num_exp2(fmt, val) {
   var o;
@@ -2805,7 +1898,7 @@ function write_num_int(type, fmt, val) {
   if (r = fmt.match(dec1)) {
     o = ("" + val).replace(/^([^\.]+)$/, "$1." + hashq(r[1])).replace(/\.$/, "." + hashq(r[1]));
     o = o.replace(/\.(\d*)$/, function($$, $1) {
-      return "." + $1 + fill2("0", hashq(r[1]).length - $1.length);
+      return "." + $1 + fill("0", hashq(r[1]).length - $1.length);
     });
     return fmt.indexOf("0.") !== -1 ? o : o.replace(/^0\./, ".");
   }
@@ -2816,7 +1909,7 @@ function write_num_int(type, fmt, val) {
   if (r = fmt.match(/^#{1,3},##0(\.?)$/))
     return sign + commaify("" + aval);
   if (r = fmt.match(/^#,##0\.([#0]*0)$/)) {
-    return val < 0 ? "-" + write_num_int(type, fmt, -val) : commaify("" + val) + "." + fill2("0", r[1].length);
+    return val < 0 ? "-" + write_num_int(type, fmt, -val) : commaify("" + val) + "." + fill("0", r[1].length);
   }
   if (r = fmt.match(/^#,#*,#0/))
     return write_num_int(type, fmt.replace(/^#,#*,/, ""), val);
@@ -2860,7 +1953,7 @@ function write_num_int(type, fmt, val) {
   if (r = fmt.match(/^# ([#0?]+)( ?)\/( ?)([#0?]+)/)) {
     ri = Math.min(Math.max(r[1].length, r[4].length), 7);
     ff = SSF_frac(aval, Math.pow(10, ri) - 1, true);
-    return sign + (ff[0] || (ff[1] ? "" : "0")) + " " + (ff[1] ? pad_(ff[1], ri) + r[2] + "/" + r[3] + rpad_(ff[2], ri) : fill2(" ", 2 * ri + 1 + r[2].length + r[3].length));
+    return sign + (ff[0] || (ff[1] ? "" : "0")) + " " + (ff[1] ? pad_(ff[1], ri) + r[2] + "/" + r[3] + rpad_(ff[2], ri) : fill(" ", 2 * ri + 1 + r[2].length + r[3].length));
   }
   if (r = fmt.match(/^[#0?]+$/)) {
     o = "" + val;
@@ -3726,7 +2819,7 @@ function numdate(v) {
   return out;
 }
 function parse_isodur(s) {
-  var sec = 0, mt = 0, time = false;
+  var sec = 0, mt = 0, time3 = false;
   var m = s.match(/P([0-9\.]+Y)?([0-9\.]+M)?([0-9\.]+D)?T([0-9\.]+H)?([0-9\.]+M)?([0-9\.]+S)?/);
   if (!m)
     throw new Error("|" + s + "| is not an ISO8601 Duration");
@@ -3735,7 +2828,7 @@ function parse_isodur(s) {
       continue;
     mt = 1;
     if (i > 3)
-      time = true;
+      time3 = true;
     switch (m[i].slice(m[i].length - 1)) {
       case "Y":
         throw new Error("Unsupported ISO Duration Field: " + m[i].slice(m[i].length - 1));
@@ -3744,7 +2837,7 @@ function parse_isodur(s) {
       case "H":
         mt *= 60;
       case "M":
-        if (!time)
+        if (!time3)
           throw new Error("Unsupported ISO Duration Field: M");
         else
           mt *= 60;
@@ -3780,7 +2873,7 @@ function parseDate(str, fixdate) {
   return out;
 }
 function cc2str(arr, debomit) {
-  if (has_buf && Buffer2.isBuffer(arr)) {
+  if (has_buf && Buffer.isBuffer(arr)) {
     if (debomit) {
       if (arr[0] == 255 && arr[1] == 254)
         return utf8write(arr.slice(2).toString("utf16le"));
@@ -3851,7 +2944,7 @@ function dup(o) {
       out[k] = dup(o[k]);
   return out;
 }
-function fill2(c, l) {
+function fill(c, l) {
   var o = "";
   while (o.length < l)
     o += c;
@@ -4234,7 +3327,7 @@ function write_vt(s, xlsx) {
 }
 function xlml_normalize(d) {
   if (has_buf && /*::typeof Buffer !== "undefined" && d != null && d instanceof Buffer &&*/
-  Buffer2.isBuffer(d))
+  Buffer.isBuffer(d))
     return d.toString("utf8");
   if (typeof d === "string")
     return d;
@@ -4314,7 +3407,7 @@ function ReadShift(size, t) {
   switch (t) {
     case "dbcs":
       loc = this.l;
-      if (has_buf && Buffer2.isBuffer(this))
+      if (has_buf && Buffer.isBuffer(this))
         o = this.slice(this.l, this.l + 2 * size).toString("utf16le");
       else
         for (i = 0; i < size; ++i) {
@@ -5715,12 +4808,12 @@ function write_cust_props(cp) {
   })];
   if (!cp)
     return o.join("");
-  var pid = 1;
+  var pid2 = 1;
   keys(cp).forEach(/* @__PURE__ */ __name(function custprop(k) {
-    ++pid;
+    ++pid2;
     o[o.length] = writextag("property", write_vt(cp[k], true), {
       "fmtid": "{D5CDD505-2E9C-101B-9397-08002B2CF9AE}",
-      "pid": pid,
+      "pid": pid2,
       "name": escapexml(k)
     });
   }, "custprop"));
@@ -5821,8 +4914,8 @@ function parse_FILETIME(blob) {
   var dwLowDateTime = blob.read_shift(4), dwHighDateTime = blob.read_shift(4);
   return new Date((dwHighDateTime / 1e7 * Math.pow(2, 32) + dwLowDateTime / 1e7 - 11644473600) * 1e3).toISOString().replace(/\.000/, "");
 }
-function write_FILETIME(time) {
-  var date = typeof time == "string" ? new Date(Date.parse(time)) : time;
+function write_FILETIME(time3) {
+  var date = typeof time3 == "string" ? new Date(Date.parse(time3)) : time3;
   var t = date.getTime() / 1e3 + 11644473600;
   var l = t % Math.pow(2, 32), h = (t - l) / Math.pow(2, 32);
   l *= 1e7;
@@ -5901,9 +4994,9 @@ function parse_dictionary(blob, CodePage) {
   var cnt = blob.read_shift(4);
   var dict = {};
   for (var j = 0; j != cnt; ++j) {
-    var pid = blob.read_shift(4);
+    var pid2 = blob.read_shift(4);
     var len = blob.read_shift(4);
-    dict[pid] = blob.read_shift(len, CodePage === 1200 ? "utf16le" : "utf8").replace(chr0, "").replace(chr1, "!");
+    dict[pid2] = blob.read_shift(len, CodePage === 1200 ? "utf16le" : "utf8").replace(chr0, "").replace(chr1, "!");
     if (CodePage === 1200 && len % 2)
       blob.l += 2;
   }
@@ -8407,7 +7500,7 @@ function parse_borders(t, styles, themes, opts) {
 }
 function parse_fills(t, styles, themes, opts) {
   styles.Fills = [];
-  var fill3 = {};
+  var fill2 = {};
   var pass = false;
   (t[0].match(tagregex) || []).forEach(function(x) {
     var y = parsexmltag(x);
@@ -8419,8 +7512,8 @@ function parse_fills(t, styles, themes, opts) {
       case "<fill>":
       case "<fill":
       case "<fill/>":
-        fill3 = {};
-        styles.Fills.push(fill3);
+        fill2 = {};
+        styles.Fills.push(fill2);
         break;
       case "</fill>":
         break;
@@ -8428,41 +7521,41 @@ function parse_fills(t, styles, themes, opts) {
         break;
       case "<gradientFill":
       case "</gradientFill>":
-        styles.Fills.push(fill3);
-        fill3 = {};
+        styles.Fills.push(fill2);
+        fill2 = {};
         break;
       case "<patternFill":
       case "<patternFill>":
         if (y.patternType)
-          fill3.patternType = y.patternType;
+          fill2.patternType = y.patternType;
         break;
       case "<patternFill/>":
       case "</patternFill>":
         break;
       case "<bgColor":
-        if (!fill3.bgColor)
-          fill3.bgColor = {};
+        if (!fill2.bgColor)
+          fill2.bgColor = {};
         if (y.indexed)
-          fill3.bgColor.indexed = parseInt(y.indexed, 10);
+          fill2.bgColor.indexed = parseInt(y.indexed, 10);
         if (y.theme)
-          fill3.bgColor.theme = parseInt(y.theme, 10);
+          fill2.bgColor.theme = parseInt(y.theme, 10);
         if (y.tint)
-          fill3.bgColor.tint = parseFloat(y.tint);
+          fill2.bgColor.tint = parseFloat(y.tint);
         if (y.rgb)
-          fill3.bgColor.rgb = y.rgb.slice(-6);
+          fill2.bgColor.rgb = y.rgb.slice(-6);
         break;
       case "<bgColor/>":
       case "</bgColor>":
         break;
       case "<fgColor":
-        if (!fill3.fgColor)
-          fill3.fgColor = {};
+        if (!fill2.fgColor)
+          fill2.fgColor = {};
         if (y.theme)
-          fill3.fgColor.theme = parseInt(y.theme, 10);
+          fill2.fgColor.theme = parseInt(y.theme, 10);
         if (y.tint)
-          fill3.fgColor.tint = parseFloat(y.tint);
+          fill2.fgColor.tint = parseFloat(y.tint);
         if (y.rgb != null)
-          fill3.fgColor.rgb = y.rgb.slice(-6);
+          fill2.fgColor.rgb = y.rgb.slice(-6);
         break;
       case "<fgColor/>":
       case "</fgColor>":
@@ -8929,12 +8022,12 @@ function write_BrtFont(font, o) {
   write_XLWideString(font.name, o);
   return o.length > o.l ? o.slice(0, o.l) : o;
 }
-function write_BrtFill(fill3, o) {
+function write_BrtFill(fill2, o) {
   if (!o)
     o = new_buf(4 * 3 + 8 * 7 + 16 * 1);
   if (!rev_XLSBFillPTNames)
     rev_XLSBFillPTNames = evert(XLSBFillPTNames);
-  var fls = rev_XLSBFillPTNames[fill3.patternType];
+  var fls = rev_XLSBFillPTNames[fill2.patternType];
   if (fls == null)
     fls = 40;
   o.write_shift(4, fls);
@@ -10713,9 +9806,9 @@ function parse_SerAr(blob, biff) {
   return val;
 }
 function parse_PtgExtraMem(blob, cce, opts) {
-  var count = blob.read_shift(opts.biff == 12 ? 4 : 2);
+  var count3 = blob.read_shift(opts.biff == 12 ? 4 : 2);
   var out = [];
-  for (var i = 0; i != count; ++i)
+  for (var i = 0; i != count3; ++i)
     out.push((opts.biff == 12 ? parse_UncheckedRfX : parse_Ref8U)(blob, 8));
   return out;
 }
@@ -11027,10 +10120,10 @@ function stringify_formula(formula, range, cell, supbooks, opts) {
         if (last_sp >= 0) {
           switch (formula[0][last_sp][1][0]) {
             case 0:
-              sp = fill2(" ", formula[0][last_sp][1][1]);
+              sp = fill(" ", formula[0][last_sp][1][1]);
               break;
             case 1:
-              sp = fill2("\r", formula[0][last_sp][1][1]);
+              sp = fill("\r", formula[0][last_sp][1][1]);
               break;
             default:
               sp = "";
@@ -11187,16 +10280,16 @@ function stringify_formula(formula, range, cell, supbooks, opts) {
           sp = "";
           switch (formula[0][last_sp][1][0]) {
             case 2:
-              lp = fill2(" ", formula[0][last_sp][1][1]) + lp;
+              lp = fill(" ", formula[0][last_sp][1][1]) + lp;
               break;
             case 3:
-              lp = fill2("\r", formula[0][last_sp][1][1]) + lp;
+              lp = fill("\r", formula[0][last_sp][1][1]) + lp;
               break;
             case 4:
-              rp = fill2(" ", formula[0][last_sp][1][1]) + rp;
+              rp = fill(" ", formula[0][last_sp][1][1]) + rp;
               break;
             case 5:
-              rp = fill2("\r", formula[0][last_sp][1][1]) + rp;
+              rp = fill("\r", formula[0][last_sp][1][1]) + rp;
               break;
             default:
               if (opts.WTF)
@@ -11302,12 +10395,12 @@ function stringify_formula(formula, range, cell, supbooks, opts) {
           case 4:
             _left = false;
           case 0:
-            sp = fill2(" ", f[1][1]);
+            sp = fill(" ", f[1][1]);
             break;
           case 5:
             _left = false;
           case 1:
-            sp = fill2("\r", f[1][1]);
+            sp = fill("\r", f[1][1]);
             break;
           default:
             sp = "";
@@ -17476,7 +16569,7 @@ function sheet_to_html(ws, opts) {
   out.push("</table>" + footer);
   return out.join("");
 }
-function sheet_add_dom(ws, table, _opts) {
+function sheet_add_dom(ws, table3, _opts) {
   var opts = _opts || {};
   if (DENSE != null)
     opts.dense = DENSE;
@@ -17490,7 +16583,7 @@ function sheet_add_dom(ws, table, _opts) {
       or_C = _origin.c;
     }
   }
-  var rows = table.getElementsByTagName("tr");
+  var rows = table3.getElementsByTagName("tr");
   var sheetRows = Math.min(opts.sheetRows || 1e7, rows.length);
   var range = { s: { r: 0, c: 0 }, e: { r: or_R, c: or_C } };
   if (ws["!ref"]) {
@@ -17583,13 +16676,13 @@ function sheet_add_dom(ws, table, _opts) {
     ws["!fullref"] = encode_range((range.e.r = rows.length - _R + R - 1 + or_R, range));
   return ws;
 }
-function parse_dom_table(table, _opts) {
+function parse_dom_table(table3, _opts) {
   var opts = _opts || {};
   var ws = opts.dense ? [] : {};
-  return sheet_add_dom(ws, table, _opts);
+  return sheet_add_dom(ws, table3, _opts);
 }
-function table_to_book(table, opts) {
-  return sheet_to_workbook(parse_dom_table(table, opts), opts);
+function table_to_book(table3, opts) {
+  return sheet_to_workbook(parse_dom_table(table3, opts), opts);
 }
 function is_dom_element_hidden(element) {
   var display = "";
@@ -19621,62 +18714,62 @@ function parse_zip(zip, opts) {
     throw new Error("Unsupported ZIP file");
   }
   var entries = zipentries(zip);
-  var dir = parse_ct(getzipstr(zip, "[Content_Types].xml"));
+  var dir3 = parse_ct(getzipstr(zip, "[Content_Types].xml"));
   var xlsb = false;
   var sheets, binname;
-  if (dir.workbooks.length === 0) {
+  if (dir3.workbooks.length === 0) {
     binname = "xl/workbook.xml";
     if (getzipdata(zip, binname, true))
-      dir.workbooks.push(binname);
+      dir3.workbooks.push(binname);
   }
-  if (dir.workbooks.length === 0) {
+  if (dir3.workbooks.length === 0) {
     binname = "xl/workbook.bin";
     if (!getzipdata(zip, binname, true))
       throw new Error("Could not find workbook");
-    dir.workbooks.push(binname);
+    dir3.workbooks.push(binname);
     xlsb = true;
   }
-  if (dir.workbooks[0].slice(-3) == "bin")
+  if (dir3.workbooks[0].slice(-3) == "bin")
     xlsb = true;
   var themes = {};
   var styles = {};
   if (!opts.bookSheets && !opts.bookProps) {
     strs = [];
-    if (dir.sst)
+    if (dir3.sst)
       try {
-        strs = parse_sst(getzipdata(zip, strip_front_slash(dir.sst)), dir.sst, opts);
+        strs = parse_sst(getzipdata(zip, strip_front_slash(dir3.sst)), dir3.sst, opts);
       } catch (e) {
         if (opts.WTF)
           throw e;
       }
-    if (opts.cellStyles && dir.themes.length)
-      themes = parse_theme(getzipstr(zip, dir.themes[0].replace(/^\//, ""), true) || "", dir.themes[0], opts);
-    if (dir.style)
-      styles = parse_sty(getzipdata(zip, strip_front_slash(dir.style)), dir.style, themes, opts);
+    if (opts.cellStyles && dir3.themes.length)
+      themes = parse_theme(getzipstr(zip, dir3.themes[0].replace(/^\//, ""), true) || "", dir3.themes[0], opts);
+    if (dir3.style)
+      styles = parse_sty(getzipdata(zip, strip_front_slash(dir3.style)), dir3.style, themes, opts);
   }
-  dir.links.map(function(link) {
+  dir3.links.map(function(link) {
     try {
       var rels = parse_rels(getzipstr(zip, get_rels_path(strip_front_slash(link))), link);
       return parse_xlink(getzipdata(zip, strip_front_slash(link)), rels, link, opts);
     } catch (e) {
     }
   });
-  var wb = parse_wb(getzipdata(zip, strip_front_slash(dir.workbooks[0])), dir.workbooks[0], opts);
+  var wb = parse_wb(getzipdata(zip, strip_front_slash(dir3.workbooks[0])), dir3.workbooks[0], opts);
   var props = {}, propdata = "";
-  if (dir.coreprops.length) {
-    propdata = getzipdata(zip, strip_front_slash(dir.coreprops[0]), true);
+  if (dir3.coreprops.length) {
+    propdata = getzipdata(zip, strip_front_slash(dir3.coreprops[0]), true);
     if (propdata)
       props = parse_core_props(propdata);
-    if (dir.extprops.length !== 0) {
-      propdata = getzipdata(zip, strip_front_slash(dir.extprops[0]), true);
+    if (dir3.extprops.length !== 0) {
+      propdata = getzipdata(zip, strip_front_slash(dir3.extprops[0]), true);
       if (propdata)
         parse_ext_props(propdata, props, opts);
     }
   }
   var custprops = {};
   if (!opts.bookSheets || opts.bookProps) {
-    if (dir.custprops.length !== 0) {
-      propdata = getzipstr(zip, strip_front_slash(dir.custprops[0]), true);
+    if (dir3.custprops.length !== 0) {
+      propdata = getzipstr(zip, strip_front_slash(dir3.custprops[0]), true);
       if (propdata)
         custprops = parse_cust_props(propdata, opts);
     }
@@ -19700,8 +18793,8 @@ function parse_zip(zip, opts) {
   }
   sheets = {};
   var deps = {};
-  if (opts.bookDeps && dir.calcchain)
-    deps = parse_cc(getzipdata(zip, strip_front_slash(dir.calcchain)), dir.calcchain, opts);
+  if (opts.bookDeps && dir3.calcchain)
+    deps = parse_cc(getzipdata(zip, strip_front_slash(dir3.calcchain)), dir3.calcchain, opts);
   var i = 0;
   var sheetRels = {};
   var path, relsPath;
@@ -19714,16 +18807,16 @@ function parse_zip(zip, opts) {
     }
   }
   var wbext = xlsb ? "bin" : "xml";
-  var wbrelsi = dir.workbooks[0].lastIndexOf("/");
-  var wbrelsfile = (dir.workbooks[0].slice(0, wbrelsi + 1) + "_rels/" + dir.workbooks[0].slice(wbrelsi + 1) + ".rels").replace(/^\//, "");
+  var wbrelsi = dir3.workbooks[0].lastIndexOf("/");
+  var wbrelsfile = (dir3.workbooks[0].slice(0, wbrelsi + 1) + "_rels/" + dir3.workbooks[0].slice(wbrelsi + 1) + ".rels").replace(/^\//, "");
   if (!safegetzipfile(zip, wbrelsfile))
     wbrelsfile = "xl/_rels/workbook." + wbext + ".rels";
   var wbrels = parse_rels(getzipstr(zip, wbrelsfile, true), wbrelsfile.replace(/_rels.*/, "s5s"));
-  if ((dir.metadata || []).length >= 1) {
-    opts.xlmeta = parse_xlmeta(getzipdata(zip, strip_front_slash(dir.metadata[0])), dir.metadata[0], opts);
+  if ((dir3.metadata || []).length >= 1) {
+    opts.xlmeta = parse_xlmeta(getzipdata(zip, strip_front_slash(dir3.metadata[0])), dir3.metadata[0], opts);
   }
-  if ((dir.people || []).length >= 1) {
-    opts.people = parse_people_xml(getzipdata(zip, strip_front_slash(dir.people[0])), opts);
+  if ((dir3.people || []).length >= 1) {
+    opts.people = parse_people_xml(getzipdata(zip, strip_front_slash(dir3.people[0])), opts);
   }
   if (wbrels)
     wbrels = safe_parse_wbrels(wbrels, wb.Sheets);
@@ -19769,7 +18862,7 @@ function parse_zip(zip, opts) {
       safe_parse_sheet(zip, path, relsPath, props.SheetNames[i], i, sheetRels, sheets, stype, opts, wb, themes, styles);
     }
   out = {
-    Directory: dir,
+    Directory: dir3,
     Workbook: wb,
     Props: props,
     Custprops: custprops,
@@ -19796,9 +18889,9 @@ function parse_zip(zip, opts) {
     }
   }
   if (opts && opts.bookVBA) {
-    if (dir.vba.length > 0)
-      out.vbaraw = getzipdata(zip, strip_front_slash(dir.vba[0]), true);
-    else if (dir.defaults && dir.defaults.bin === CT_VBA)
+    if (dir3.vba.length > 0)
+      out.vbaraw = getzipdata(zip, strip_front_slash(dir3.vba[0]), true);
+    else if (dir3.defaults && dir3.defaults.bin === CT_VBA)
       out.vbaraw = getzipdata(zip, "xl/vbaProject.bin", true);
   }
   return out;
@@ -20161,7 +19254,7 @@ function read_zip(data, opts) {
   var zip, d = data;
   var o = opts || {};
   if (!o.type)
-    o.type = has_buf && Buffer2.isBuffer(data) ? "buffer" : "base64";
+    o.type = has_buf && Buffer.isBuffer(data) ? "buffer" : "base64";
   zip = zip_read(d, o);
   return parse_zip(zip, o);
 }
@@ -20239,7 +19332,7 @@ function readSync(data, opts) {
   if (o.dateNF)
     _ssfopts.dateNF = o.dateNF;
   if (!o.type)
-    o.type = has_buf && Buffer2.isBuffer(data) ? "buffer" : "base64";
+    o.type = has_buf && Buffer.isBuffer(data) ? "buffer" : "base64";
   if (o.type == "file") {
     o.type = has_buf ? "buffer" : "binary";
     d = read_binary(data);
@@ -21232,8 +20325,9 @@ var init_xlsx = __esm({
   "node_modules/xlsx/xlsx.mjs"() {
     init_strip_cf_connecting_ip_header();
     init_modules_watch_stub();
-    init_process();
-    init_buffer();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+    init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+    init_performance2();
     XLSX = {};
     XLSX.version = "0.18.5";
     current_codepage = 1200;
@@ -21338,20 +20432,20 @@ var init_xlsx = __esm({
     __name(Base64_encode, "Base64_encode");
     __name(Base64_decode, "Base64_decode");
     has_buf = /* @__PURE__ */ function() {
-      return typeof Buffer2 !== "undefined" && typeof process !== "undefined" && typeof process.versions !== "undefined" && !!process.versions.node;
+      return typeof Buffer !== "undefined" && typeof process !== "undefined" && typeof process.versions !== "undefined" && !!process.versions.node;
     }();
     Buffer_from = /* @__PURE__ */ function() {
-      if (typeof Buffer2 !== "undefined") {
-        var nbfs = !Buffer2.from;
+      if (typeof Buffer !== "undefined") {
+        var nbfs = !Buffer.from;
         if (!nbfs)
           try {
-            Buffer2.from("foo", "utf8");
+            Buffer.from("foo", "utf8");
           } catch (e) {
             nbfs = true;
           }
         return nbfs ? function(buf, enc) {
-          return enc ? new Buffer2(buf, enc) : new Buffer2(buf);
-        } : Buffer2.from.bind(Buffer2);
+          return enc ? new Buffer(buf, enc) : new Buffer(buf);
+        } : Buffer.from.bind(Buffer);
       }
       return function() {
       };
@@ -21370,8 +20464,8 @@ var init_xlsx = __esm({
     __name(a2u, "a2u");
     __name(ab2a, "ab2a");
     bconcat = has_buf ? function(bufs) {
-      return Buffer2.concat(bufs.map(function(buf) {
-        return Buffer2.isBuffer(buf) ? buf : Buffer_from(buf);
+      return Buffer.concat(bufs.map(function(buf) {
+        return Buffer.isBuffer(buf) ? buf : Buffer_from(buf);
       }));
     } : function(bufs) {
       if (typeof Uint8Array !== "undefined") {
@@ -21660,7 +20754,7 @@ var init_xlsx = __esm({
       var CRC322 = {};
       CRC322.version = "1.2.0";
       function signed_crc_table() {
-        var c = 0, table = new Array(256);
+        var c = 0, table3 = new Array(256);
         for (var n = 0; n != 256; ++n) {
           c = n;
           c = c & 1 ? -306674912 ^ c >>> 1 : c >>> 1;
@@ -21671,24 +20765,24 @@ var init_xlsx = __esm({
           c = c & 1 ? -306674912 ^ c >>> 1 : c >>> 1;
           c = c & 1 ? -306674912 ^ c >>> 1 : c >>> 1;
           c = c & 1 ? -306674912 ^ c >>> 1 : c >>> 1;
-          table[n] = c;
+          table3[n] = c;
         }
-        return typeof Int32Array !== "undefined" ? new Int32Array(table) : table;
+        return typeof Int32Array !== "undefined" ? new Int32Array(table3) : table3;
       }
       __name(signed_crc_table, "signed_crc_table");
       var T0 = signed_crc_table();
       function slice_by_16_tables(T) {
-        var c = 0, v = 0, n = 0, table = typeof Int32Array !== "undefined" ? new Int32Array(4096) : new Array(4096);
+        var c = 0, v = 0, n = 0, table3 = typeof Int32Array !== "undefined" ? new Int32Array(4096) : new Array(4096);
         for (n = 0; n != 256; ++n)
-          table[n] = T[n];
+          table3[n] = T[n];
         for (n = 0; n != 256; ++n) {
           v = T[n];
           for (c = 256 + n; c < 4096; c += 256)
-            v = table[c] = v >>> 8 ^ T[v & 255];
+            v = table3[c] = v >>> 8 ^ T[v & 255];
         }
         var out = [];
         for (n = 1; n != 16; ++n)
-          out[n - 1] = typeof Int32Array !== "undefined" ? table.subarray(n * 256, n * 256 + 256) : table.slice(n * 256, n * 256 + 256);
+          out[n - 1] = typeof Int32Array !== "undefined" ? table3.subarray(n * 256, n * 256 + 256) : table3.slice(n * 256, n * 256 + 256);
         return out;
       }
       __name(slice_by_16_tables, "slice_by_16_tables");
@@ -22184,7 +21278,7 @@ var init_xlsx = __esm({
       function read(blob, options) {
         var type = options && options.type;
         if (!type) {
-          if (has_buf && Buffer2.isBuffer(blob))
+          if (has_buf && Buffer.isBuffer(blob))
             type = "buffer";
         }
         switch (type || "base64") {
@@ -22478,7 +21572,7 @@ var init_xlsx = __esm({
           file = cfb.FileIndex[i2];
           if (file.size >= 4096) {
             o.l = file.start + 1 << 9;
-            if (has_buf && Buffer2.isBuffer(file.content)) {
+            if (has_buf && Buffer.isBuffer(file.content)) {
               file.content.copy(o, o.l, 0, file.size);
               o.l += file.size + 511 & -512;
             } else {
@@ -22492,7 +21586,7 @@ var init_xlsx = __esm({
         for (i2 = 1; i2 < cfb.FileIndex.length; ++i2) {
           file = cfb.FileIndex[i2];
           if (file.size > 0 && file.size < 4096) {
-            if (has_buf && Buffer2.isBuffer(file.content)) {
+            if (has_buf && Buffer.isBuffer(file.content)) {
               file.content.copy(o, o.l, 0, file.size);
               o.l += file.size + 63 & -64;
             } else {
@@ -22577,7 +21671,7 @@ var init_xlsx = __esm({
         return out.join("");
       }
       __name(a2s2, "a2s");
-      function write2(cfb, options) {
+      function write(cfb, options) {
         var o = _write(cfb, options);
         switch (options && options.type || "buffer") {
           case "file":
@@ -22590,13 +21684,13 @@ var init_xlsx = __esm({
             return Base64_encode(typeof o == "string" ? o : a2s2(o));
           case "buffer":
             if (has_buf)
-              return Buffer2.isBuffer(o) ? o : Buffer_from(o);
+              return Buffer.isBuffer(o) ? o : Buffer_from(o);
           case "array":
             return typeof o == "string" ? s2a(o) : o;
         }
         return o;
       }
-      __name(write2, "write");
+      __name(write, "write");
       var _zlib;
       function use_zlib(zlib) {
         try {
@@ -23449,7 +22543,7 @@ var init_xlsx = __esm({
         if (a2s2(file.slice(0, 13)).toLowerCase() != "mime-version:")
           throw new Error("Unsupported MAD header");
         var root = options && options.root || "";
-        var data = (has_buf && Buffer2.isBuffer(file) ? file.toString("binary") : a2s2(file)).split("\r\n");
+        var data = (has_buf && Buffer.isBuffer(file) ? file.toString("binary") : a2s2(file)).split("\r\n");
         var di = 0, row = "";
         for (di = 0; di < data.length; ++di) {
           row = data[di];
@@ -23512,7 +22606,7 @@ var init_xlsx = __esm({
             return "_u" + u.charCodeAt(0).toString(16) + "_";
           });
           var ca = fi.content;
-          var cstr = has_buf && Buffer2.isBuffer(ca) ? ca.toString("binary") : a2s2(ca);
+          var cstr = has_buf && Buffer.isBuffer(ca) ? ca.toString("binary") : a2s2(ca);
           var dispcnt = 0, L = Math.min(1024, cstr.length), cc = 0;
           for (var csl = 0; csl <= L; ++csl)
             if ((cc = cstr.charCodeAt(csl)) >= 32 && cc < 128)
@@ -23603,7 +22697,7 @@ var init_xlsx = __esm({
       exports.find = find;
       exports.read = read;
       exports.parse = parse;
-      exports.write = write2;
+      exports.write = write;
       exports.writeFile = write_file;
       exports.utils = {
         cfb_new,
@@ -23645,7 +22739,7 @@ var init_xlsx = __esm({
     __name(parseDate, "parseDate");
     __name(cc2str, "cc2str");
     __name(dup, "dup");
-    __name(fill2, "fill");
+    __name(fill, "fill");
     __name(fuzzynum, "fuzzynum");
     lower_months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
     __name(fuzzydate, "fuzzydate");
@@ -23850,8 +22944,8 @@ var init_xlsx = __esm({
       return x;
     }, "___toBuffer");
     __toBuffer = has_buf ? function(bufs) {
-      return bufs[0].length > 0 && Buffer2.isBuffer(bufs[0][0]) ? Buffer2.concat(bufs[0].map(function(x) {
-        return Buffer2.isBuffer(x) ? x : Buffer_from(x);
+      return bufs[0].length > 0 && Buffer.isBuffer(bufs[0][0]) ? Buffer.concat(bufs[0].map(function(x) {
+        return Buffer.isBuffer(x) ? x : Buffer_from(x);
       })) : ___toBuffer(bufs);
     } : ___toBuffer;
     ___utf16le = /* @__PURE__ */ __name(function(b, s, e) {
@@ -23861,7 +22955,7 @@ var init_xlsx = __esm({
       return ss.join("").replace(chr0, "");
     }, "___utf16le");
     __utf16le = has_buf ? function(b, s, e) {
-      if (!Buffer2.isBuffer(b))
+      if (!Buffer.isBuffer(b))
         return ___utf16le(b, s, e);
       return b.toString("utf16le", s, e).replace(chr0, "");
     } : ___utf16le;
@@ -23872,7 +22966,7 @@ var init_xlsx = __esm({
       return ss.join("");
     }, "___hexlify");
     __hexlify = has_buf ? function(b, s, l) {
-      return Buffer2.isBuffer(b) ? b.toString("hex", s, s + l) : ___hexlify(b, s, l);
+      return Buffer.isBuffer(b) ? b.toString("hex", s, s + l) : ___hexlify(b, s, l);
     } : ___hexlify;
     ___utf8 = /* @__PURE__ */ __name(function(b, s, e) {
       var ss = [];
@@ -23881,7 +22975,7 @@ var init_xlsx = __esm({
       return ss.join("");
     }, "___utf8");
     __utf8 = has_buf ? /* @__PURE__ */ __name(function utf8_b(b, s, e) {
-      return Buffer2.isBuffer(b) ? b.toString("utf8", s, e) : ___utf8(b, s, e);
+      return Buffer.isBuffer(b) ? b.toString("utf8", s, e) : ___utf8(b, s, e);
     }, "utf8_b") : ___utf8;
     ___lpstr = /* @__PURE__ */ __name(function(b, i) {
       var len = __readUInt32LE(b, i);
@@ -23917,42 +23011,42 @@ var init_xlsx = __esm({
     }, "is_buf_a");
     if (has_buf) {
       __lpstr = /* @__PURE__ */ __name(function lpstr_b(b, i) {
-        if (!Buffer2.isBuffer(b))
+        if (!Buffer.isBuffer(b))
           return ___lpstr(b, i);
         var len = b.readUInt32LE(i);
         return len > 0 ? b.toString("utf8", i + 4, i + 4 + len - 1) : "";
       }, "lpstr_b");
       __cpstr = /* @__PURE__ */ __name(function cpstr_b(b, i) {
-        if (!Buffer2.isBuffer(b))
+        if (!Buffer.isBuffer(b))
           return ___cpstr(b, i);
         var len = b.readUInt32LE(i);
         return len > 0 ? b.toString("utf8", i + 4, i + 4 + len - 1) : "";
       }, "cpstr_b");
       __lpwstr = /* @__PURE__ */ __name(function lpwstr_b(b, i) {
-        if (!Buffer2.isBuffer(b))
+        if (!Buffer.isBuffer(b))
           return ___lpwstr(b, i);
         var len = 2 * b.readUInt32LE(i);
         return b.toString("utf16le", i + 4, i + 4 + len - 1);
       }, "lpwstr_b");
       __lpp4 = /* @__PURE__ */ __name(function lpp4_b(b, i) {
-        if (!Buffer2.isBuffer(b))
+        if (!Buffer.isBuffer(b))
           return ___lpp4(b, i);
         var len = b.readUInt32LE(i);
         return b.toString("utf16le", i + 4, i + 4 + len);
       }, "lpp4_b");
       __8lpp4 = /* @__PURE__ */ __name(function lpp4_8b(b, i) {
-        if (!Buffer2.isBuffer(b))
+        if (!Buffer.isBuffer(b))
           return ___8lpp4(b, i);
         var len = b.readUInt32LE(i);
         return b.toString("utf8", i + 4, i + 4 + len);
       }, "lpp4_8b");
       __double = /* @__PURE__ */ __name(function double_(b, i) {
-        if (Buffer2.isBuffer(b))
+        if (Buffer.isBuffer(b))
           return b.readDoubleLE(i);
         return ___double(b, i);
       }, "double_");
       is_buf = /* @__PURE__ */ __name(function is_buf_b(a) {
-        return Buffer2.isBuffer(a) || Array.isArray(a) || typeof Uint8Array !== "undefined" && a instanceof Uint8Array;
+        return Buffer.isBuffer(a) || Array.isArray(a) || typeof Uint8Array !== "undefined" && a instanceof Uint8Array;
       }, "is_buf_b");
     }
     __name(cpdoit, "cpdoit");
@@ -25791,7 +24885,7 @@ var init_xlsx = __esm({
           case "binary":
             return sylk_to_aoa_str(d, opts);
           case "buffer":
-            return sylk_to_aoa_str(has_buf && Buffer2.isBuffer(d) ? d.toString("binary") : a2s(d), opts);
+            return sylk_to_aoa_str(has_buf && Buffer.isBuffer(d) ? d.toString("binary") : a2s(d), opts);
           case "array":
             return sylk_to_aoa_str(cc2str(d), opts);
         }
@@ -26083,7 +25177,7 @@ var init_xlsx = __esm({
           case "binary":
             return dif_to_aoa_str(d, opts);
           case "buffer":
-            return dif_to_aoa_str(has_buf && Buffer2.isBuffer(d) ? d.toString("binary") : a2s(d), opts);
+            return dif_to_aoa_str(has_buf && Buffer.isBuffer(d) ? d.toString("binary") : a2s(d), opts);
           case "array":
             return dif_to_aoa_str(cc2str(d), opts);
         }
@@ -26606,7 +25700,7 @@ var init_xlsx = __esm({
             else if (opts.codepage && typeof $cptable !== "undefined")
               str = $cptable.utils.decode(opts.codepage, d);
             else
-              str = has_buf && Buffer2.isBuffer(d) ? d.toString("binary") : a2s(d);
+              str = has_buf && Buffer.isBuffer(d) ? d.toString("binary") : a2s(d);
             break;
           case "array":
             str = cc2str(d);
@@ -28029,7 +27123,7 @@ var init_xlsx = __esm({
           case "binary":
             return rtf_to_sheet_str(d, opts);
           case "buffer":
-            return rtf_to_sheet_str(has_buf && Buffer2.isBuffer(d) ? d.toString("binary") : a2s(d), opts);
+            return rtf_to_sheet_str(has_buf && Buffer.isBuffer(d) ? d.toString("binary") : a2s(d), opts);
           case "array":
             return rtf_to_sheet_str(cc2str(d), opts);
         }
@@ -36790,27 +35884,30 @@ var init_xlsx = __esm({
   }
 });
 
-// .wrangler/tmp/bundle-JQcNwH/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-WDk9Cs/middleware-loader.entry.ts
 init_strip_cf_connecting_ip_header();
 init_modules_watch_stub();
-init_process();
-init_buffer();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+init_performance2();
 
-// .wrangler/tmp/bundle-JQcNwH/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-WDk9Cs/middleware-insertion-facade.js
 init_strip_cf_connecting_ip_header();
 init_modules_watch_stub();
-init_process();
-init_buffer();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+init_performance2();
 
 // worker/index.js
 init_strip_cf_connecting_ip_header();
 init_modules_watch_stub();
-init_process();
-init_buffer();
-function json(data, init2 = {}) {
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+init_performance2();
+function json(data, init = {}) {
   return new Response(JSON.stringify(data), {
     headers: { "Content-Type": "application/json" },
-    ...init2
+    ...init
   });
 }
 __name(json, "json");
@@ -36825,6 +35922,36 @@ function getCountryName(code) {
   }
 }
 __name(getCountryName, "getCountryName");
+async function ensureSchema(env2) {
+  try {
+    await env2.DB.prepare(`CREATE TABLE IF NOT EXISTS products (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nfc_code TEXT UNIQUE NOT NULL,
+      product_name TEXT NOT NULL,
+      is_authentic INTEGER DEFAULT 1,
+      country TEXT,
+      country_name TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );`).run();
+    await env2.DB.prepare(`CREATE TABLE IF NOT EXISTS scan_records (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nfc_code TEXT NOT NULL,
+      ip_address TEXT,
+      country TEXT,
+      scanned_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );`).run();
+    await env2.DB.prepare(`CREATE TABLE IF NOT EXISTS admin_tokens (
+      token TEXT PRIMARY KEY,
+      issued_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      expires_at DATETIME NOT NULL
+    );`).run();
+    await env2.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_products_nfc_code ON products(nfc_code);`).run();
+    await env2.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_scan_records_nfc_code ON scan_records(nfc_code);`).run();
+    await env2.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_admin_tokens_expires ON admin_tokens(expires_at);`).run();
+  } catch (e) {
+  }
+}
+__name(ensureSchema, "ensureSchema");
 async function verifyAdminToken(request, env2) {
   const auth = request.headers.get("Authorization") || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
@@ -36850,6 +35977,7 @@ async function handleAdminLogin(request, env2) {
   const ttlHours = parseInt(env2.ADMIN_TOKEN_TTL_HOURS || "24", 10);
   const expiresAt = new Date(Date.now() + ttlHours * 3600 * 1e3).toISOString();
   const token = crypto.randomUUID();
+  await ensureSchema(env2);
   await env2.DB.prepare("INSERT INTO admin_tokens (token, expires_at) VALUES (?, ?)").bind(token, expiresAt).run();
   return json({ token, expiresAt });
 }
@@ -36865,6 +35993,7 @@ async function handleAdminStats(request, env2) {
   const auth = await verifyAdminToken(request, env2);
   if (!auth.ok)
     return json({ error: auth.error }, { status: 401 });
+  await ensureSchema(env2);
   try {
     const { results } = await env2.DB.prepare(`
       SELECT 
@@ -36905,6 +36034,7 @@ async function handleAdminAddProduct(request, env2) {
     return json({ error: "nfcCode and productName are required" }, { status: 400 });
   const authentic = String(isAuthentic ?? "1").trim() === "1" ? 1 : 0;
   try {
+    await ensureSchema(env2);
     await env2.DB.prepare("INSERT OR IGNORE INTO products (nfc_code, product_name, is_authentic) VALUES (?, ?, ?)").bind(String(nfcCode).trim(), String(productName).trim(), authentic).run();
     return json({ success: true });
   } catch (e) {
@@ -36913,12 +36043,13 @@ async function handleAdminAddProduct(request, env2) {
 }
 __name(handleAdminAddProduct, "handleAdminAddProduct");
 async function handleVerify(request, env2, nfcCode) {
-  if (request.method !== "POST") {
+  if (request.method !== "POST" && request.method !== "GET") {
     return json({ error: "Method Not Allowed" }, { status: 405 });
   }
   const clientIP = request.headers.get("CF-Connecting-IP") || "";
   const country = request.cf && request.cf.country || "Unknown";
   const countryName = getCountryName(country);
+  await ensureSchema(env2);
   try {
     const product = await env2.DB.prepare("SELECT * FROM products WHERE nfc_code = ?").bind(nfcCode).first();
     if (!product) {
@@ -36945,8 +36076,8 @@ async function handleVerify(request, env2, nfcCode) {
       countryName: boundCountryName,
       timestamp: (/* @__PURE__ */ new Date()).toISOString()
     });
-  } catch (error) {
-    return json({ error: "Internal server error", details: String(error) }, { status: 500 });
+  } catch (error3) {
+    return json({ error: "Internal server error", details: String(error3) }, { status: 500 });
   }
 }
 __name(handleVerify, "handleVerify");
@@ -36963,6 +36094,7 @@ async function handleImportProducts(request, env2) {
   const auth = await verifyAdminToken(request, env2);
   if (!auth.ok)
     return json({ error: auth.error }, { status: 401 });
+  await ensureSchema(env2);
   const formData = await request.formData();
   const file = formData.get("excelFile") || formData.get("file") || formData.get("upload");
   if (!file)
@@ -37065,28 +36197,35 @@ var worker_default = {
     if (url.pathname === "/api/admin/products/import") {
       return handleImportProducts(request, env2);
     }
-    if (url.pathname.startsWith("/api/verify/")) {
-      const nfcCode = decodeURIComponent(url.pathname.replace("/api/verify/", ""));
-      return handleVerify(request, env2, nfcCode);
+    if (url.pathname === "/api/verify") {
+      const sp = url.searchParams;
+      let nfcCode = sp.get("nfcid") || sp.get("nfc_code") || sp.get("nfc");
+      if (!nfcCode) {
+        try {
+          const body = await request.json();
+          nfcCode = body && (body.nfcid || body.nfcCode || body.nfc || body.nfc_code);
+        } catch {
+        }
+      }
+      if (!nfcCode) {
+        return json({ error: "Missing nfcid parameter" }, { status: 400 });
+      }
+      return handleVerify(request, env2, String(nfcCode).trim());
     }
     if (url.pathname.startsWith("/api/test/ip-location")) {
       return handleTestIP(request);
     }
     if (env2.ASSETS && typeof env2.ASSETS.fetch === "function") {
       const rewriteMap = /* @__PURE__ */ new Map([
+        ["/", "/index.html"],
         ["/admin-login", "/admin-login.html"],
         ["/admin-dashboard", "/admin-dashboard.html"],
-        ["/verify", "/index.html"]
+        ["/verify", "/verify.html"]
       ]);
       const target = rewriteMap.get(url.pathname);
       if (target) {
         const rewritten = new URL(request.url);
         rewritten.pathname = target;
-        return env2.ASSETS.fetch(new Request(rewritten.toString(), request));
-      }
-      if (url.pathname.startsWith("/verify/")) {
-        const rewritten = new URL(request.url);
-        rewritten.pathname = "/verify.html";
         return env2.ASSETS.fetch(new Request(rewritten.toString(), request));
       }
       return env2.ASSETS.fetch(request);
@@ -37098,8 +36237,9 @@ var worker_default = {
 // node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
 init_strip_cf_connecting_ip_header();
 init_modules_watch_stub();
-init_process();
-init_buffer();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+init_performance2();
 var drainBody = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env2);
@@ -37120,8 +36260,9 @@ var middleware_ensure_req_body_drained_default = drainBody;
 // node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
 init_strip_cf_connecting_ip_header();
 init_modules_watch_stub();
-init_process();
-init_buffer();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+init_performance2();
 function reduceError(e) {
   return {
     name: e?.name,
@@ -37135,8 +36276,8 @@ var jsonError = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx
   try {
     return await middlewareCtx.next(request, env2);
   } catch (e) {
-    const error = reduceError(e);
-    return Response.json(error, {
+    const error3 = reduceError(e);
+    return Response.json(error3, {
       status: 500,
       headers: { "MF-Experimental-Error-Stack": "true" }
     });
@@ -37144,7 +36285,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-JQcNwH/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-WDk9Cs/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -37154,8 +36295,9 @@ var middleware_insertion_facade_default = worker_default;
 // node_modules/wrangler/templates/middleware/common.ts
 init_strip_cf_connecting_ip_header();
 init_modules_watch_stub();
-init_process();
-init_buffer();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_process();
+init_virtual_unenv_global_polyfill_cloudflare_unenv_preset_node_console();
+init_performance2();
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
   __facade_middleware__.push(...args.flat());
@@ -37180,7 +36322,7 @@ function __facade_invoke__(request, env2, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-JQcNwH/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-WDk9Cs/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -37212,11 +36354,11 @@ function wrapExportedHandler(worker) {
   return {
     ...worker,
     fetch(request, env2, ctx) {
-      const dispatcher = /* @__PURE__ */ __name(function(type, init2) {
+      const dispatcher = /* @__PURE__ */ __name(function(type, init) {
         if (type === "scheduled" && worker.scheduled !== void 0) {
           const controller = new __Facade_ScheduledController__(
             Date.now(),
-            init2.cron ?? "",
+            init.cron ?? "",
             () => {
             }
           );
@@ -37244,11 +36386,11 @@ function wrapWorkerEntrypoint(klass) {
       }
       return super.fetch(request);
     };
-    #dispatcher = (type, init2) => {
+    #dispatcher = (type, init) => {
       if (type === "scheduled" && super.scheduled !== void 0) {
         const controller = new __Facade_ScheduledController__(
           Date.now(),
-          init2.cron ?? "",
+          init.cron ?? "",
           () => {
           }
         );
@@ -37279,14 +36421,6 @@ export {
   middleware_loader_entry_default as default
 };
 /*! Bundled license information:
-
-@esbuild-plugins/node-globals-polyfill/Buffer.js:
-  (*!
-   * The buffer module from node.js, for the browser.
-   *
-   * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
-   * @license  MIT
-   *)
 
 xlsx/xlsx.mjs:
   (*! xlsx.js (C) 2013-present SheetJS -- http://sheetjs.com *)
