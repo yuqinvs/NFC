@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Environment variables file
+.env
+
+# Database files
+*.db
+*.sqlite
+
+# Log files
+logs/
+*.log
+
+# Temporary files
+.tmp/
+temp/
+
+# Operating system files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,27 @@
+name = "nfc-verification-worker"
+main = "worker.js"
+compatibility_date = "2024-01-15"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "nfc-verification-db"
+database_id = "your-database-id-here"
+
+# KV namespace for caching and rate limiting
+[[kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-id"
+preview_id = "your-preview-kv-namespace-id"
+
+# Environment variables
+[vars]
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "admin123"
+JWT_SECRET = "your-jwt-secret-key-change-this"
+DOMAIN = "verify.plearance.com"
+
+# Routes configuration
+[[routes]]
+pattern = "verify.plearance.com/api/*"
+zone_name = "plearance.com"

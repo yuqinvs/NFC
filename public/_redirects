@@ -1,0 +1,12 @@
+# API routes redirect to Worker
+/api/* https://nfc-verification-worker.verify.plearance.com/api/:splat 200
+
+# Admin routes
+/admin-login /admin-login.html 200
+/admin-dashboard /admin-dashboard.html 200
+
+# Verification routes
+/verify/:nfcCode /verify.html?nfc=:nfcCode 200
+
+# Default route
+/ /index.html 200

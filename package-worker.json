@@ -1,0 +1,27 @@
+{
+  "name": "nfc-verification-worker",
+  "version": "1.0.0",
+  "description": "NFC Verification System for Cloudflare Workers",
+  "main": "worker.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute nfc-verification-db --file=./schema.sql",
+    "db:migrate": "wrangler d1 migrations apply nfc-verification-db",
+    "pages:deploy": "wrangler pages deploy public"
+  },
+  "dependencies": {
+    "itty-router": "^4.0.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  },
+  "keywords": [
+    "nfc",
+    "verification",
+    "cloudflare-workers",
+    "anti-counterfeit"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

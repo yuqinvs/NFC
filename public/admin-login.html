@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - NFC Verification System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <img src="logo.png" alt="NFC Verification System Logo" class="logo">
+            </div>
+            <h1>🔐 Admin Login</h1>
+            <p>Please enter admin credentials to access system statistics</p>
+        </header>
+
+        <main>
+            <div class="login-section">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Login</button>
+                    </div>
+                </form>
+                
+                <div id="error" class="error" style="display: none;">
+                    <!-- Error messages will be displayed here -->
+                </div>
+                
+                <div class="actions">
+                    <button onclick="window.location.href='/'">Back to Home</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 NFC Product Verification System</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error');
+            
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Save token to localStorage
+                    localStorage.setItem('adminToken', data.token);
+                    // Redirect to admin dashboard
+                    window.location.href = '/admin-dashboard.html';
+                } else {
+                    errorDiv.innerHTML = `<h3>❌ Login Failed</h3><p>${data.error}</p>`;
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.innerHTML = '<h3>❌ Network Error</h3><p>Please try again later</p>';
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Check if already logged in
+        if (localStorage.getItem('adminToken')) {
+            // Verify if token is still valid
+            fetch('/api/admin/verify', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                }
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/admin-dashboard.html';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

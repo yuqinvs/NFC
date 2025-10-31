@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Product Verification System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@6.6.6/css/flag-icons.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <img src="logo.png" alt="NFC Verification System Logo" class="logo-main">
+            </div>
+        </header>
+
+        <main>
+            <div class="verification-section">
+                <h2>Product Verification</h2>
+                <div class="input-group">
+                    <input type="text" id="nfcCode" placeholder="Enter NFC Code (alphanumeric, max 8 chars)" maxlength="8" pattern="[A-Za-z0-9]{1,8}">
+                    <button onclick="verifyProduct()">Verify Product</button>
+                </div>
+                <div class="input-hint">
+                    <p>💡 NFC code can only contain letters and numbers, maximum 8 characters</p>
+                </div>
+            </div>
+
+            <div id="result" class="result-section" style="display: none;">
+                <!-- Verification results will be displayed here -->
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 NFC Product Verification System. </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
