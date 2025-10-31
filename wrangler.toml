@@ -2,8 +2,9 @@ name = "nfc-verification-worker"
 main = "worker/index.js"
 compatibility_date = "2024-10-31"
 workers_dev = true
-logpush = true
-node_compat = true
+# logpush disabled for non-Enterprise accounts
+# logpush = false
+compatibility_flags = ["nodejs_compat"]
 
 # Custom domain route
 routes = [
