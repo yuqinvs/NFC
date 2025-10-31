@@ -125,16 +125,10 @@ async function handleAdminAddProduct(request, env) {
   } catch {}
   const { nfcCode, productName, isAuthentic } = body;
   if (!nfcCode || !productName) return json({ error: 'nfcCode and productName are required' }, { status: 400 });
-  const authentic = coerceAuthenticFlag(isAuthentic);
+  const authentic = (String(isAuthentic ?? '1').trim() === '1') ? 1 : 0;
   try {
     await ensureSchema(env);
-    await env.DB.prepare(
-      `INSERT INTO products (nfc_code, product_name, is_authentic)
-       VALUES (?, ?, ?)
-       ON CONFLICT(nfc_code) DO UPDATE SET
-         product_name = excluded.product_name,
-         is_authentic = excluded.is_authentic`
-    )
+    await env.DB.prepare('INSERT OR IGNORE INTO products (nfc_code, product_name, is_authentic) VALUES (?, ?, ?)')
       .bind(String(nfcCode).trim(), String(productName).trim(), authentic)
       .run();
     return json({ success: true });
@@ -167,6 +161,12 @@ async function handleVerify(request, env, nfcCode) {
       });
     }
 
+    // Count scans before inserting to determine if this is the first scan
+    const prevRes = await env.DB.prepare('SELECT COUNT(*) as total_before FROM scan_records WHERE nfc_code = ?')
+      .bind(nfcCode)
+      .first();
+    const isFirstScan = !(prevRes && prevRes.total_before > 0);
+
     await env.DB.prepare('INSERT INTO scan_records (nfc_code, ip_address, country) VALUES (?, ?, ?)')
       .bind(nfcCode, clientIP, country)
       .run();
@@ -185,12 +185,20 @@ async function handleVerify(request, env, nfcCode) {
     const boundCountry = product.country || country;
     const boundCountryName = product.country_name || countryName;
 
+    // Country ranking for this product (number of scans in bound country)
+    const countryCountRes = await env.DB.prepare(
+      'SELECT COUNT(*) as country_scans FROM scan_records WHERE nfc_code = ? AND country = ?'
+    ).bind(nfcCode, boundCountry).first();
+    const countryRank = countryCountRes ? countryCountRes.country_scans : 1;
+
     return json({
       productName: product.product_name,
       isAuthentic: Boolean(product.is_authentic),
       scanCount: totalScans,
       country: boundCountry,
       countryName: boundCountryName,
+      countryRank,
+      isNewUser: isFirstScan,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
